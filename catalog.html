@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог — VIPRASSADA</title>
+<meta name="description" content="Каталог рассады VIPRASSADA: томаты, овощи, пряные травы, однолетние и ампельные растения. Фильтры по категориям, цене и наличию.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-header__logo">VIPRASSADA</a>
+  <nav class="site-header__nav">
+    <a href="catalog.html" class="active">Каталог</a>
+    <a href="index.html#about">О нас</a>
+    <a href="index.html#contacts">Контакты</a>
+  </nav>
+  <button class="btn btn-outline site-header__call desktop-only">Позвонить</button>
+  <button class="site-header__menu-btn" data-menu-toggle aria-label="Меню">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+</header>
+
+<div class="site-header__overlay" data-menu-overlay></div>
+<div class="site-header__mobile-panel">
+  <a href="catalog.html" data-menu-close>Каталог</a>
+  <a href="index.html#about" data-menu-close>О нас</a>
+  <a href="index.html#contacts" data-menu-close>Контакты</a>
+  <button class="btn btn-primary">Позвонить</button>
+</div>
+
+<main>
+  <div class="page-head">
+    <h1 class="page-head__title">Каталог</h1>
+    <div class="page-head__meta" data-total-count>Загрузка…</div>
+  </div>
+
+  <div class="catalog-layout">
+
+    <button class="filters-toggle-btn" data-filters-toggle type="button">
+      <span>Фильтры</span>
+      <span class="filters-toggle-btn__count" data-filters-count>0</span>
+    </button>
+
+    <aside class="filters">
+      <div class="filters__close">
+        <div class="page-head__title" style="font-size:20px;">Фильтры</div>
+        <button class="filters__close-btn" data-filters-close type="button">×</button>
+      </div>
+
+      <div class="filters__group">
+        <div class="filters__title">Категории</div>
+        <div data-category-list>
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="filters__group">
+        <div class="filters__title">Цена, ₽</div>
+        <div class="price-range">
+          <div class="price-range__inputs">
+            <input type="number" min="0" placeholder="от" data-price-min>
+            <input type="number" min="0" placeholder="до" data-price-max>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters__group">
+        <div class="filters__title">Наличие</div>
+        <div class="availability-options" data-availability>
+          <button type="button" class="active" data-value="all">Все</button>
+          <button type="button" data-value="in_stock">В наличии</button>
+          <button type="button" data-value="preorder">Под заказ</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary filters__apply" data-filters-close type="button">Показать товары</button>
+    </aside>
+    <div class="filters-overlay" data-filters-close></div>
+
+    <div>
+      <div class="catalog-toolbar">
+        <div class="catalog-toolbar__title" data-catalog-title>Все товары</div>
+        <div class="catalog-toolbar__count" data-catalog-count></div>
+      </div>
+
+      <div class="search-box">
+        <span class="search-box__icon">⌕</span>
+        <input type="text" placeholder="Найти товар по названию" data-search>
+      </div>
+
+      <div class="product-grid" data-product-grid>
+        <!-- filled by JS -->
+      </div>
+
+      <nav class="pagination" data-pagination></nav>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__top">
+    <div>
+      <div class="site-footer__brand">VIPRASSADA</div>
+      <div class="site-footer__desc">Выращиваем крепкую рассаду овощей, трав и цветов с 2014 года. Без перекупки — только своя теплица.</div>
+    </div>
+    <div>
+      <div class="site-footer__label">Контакты</div>
+      <div class="site-footer__contacts">+7 (916) 001-22-37<br>+7 (929) 767-50-20<br>+7 (926) 970-76-86<br>info@viprassada.ru</div>
+    </div>
+    <div>
+      <div class="site-footer__label">Адрес</div>
+      <div class="site-footer__address">Московская область,<br>Раменский г.о., д. Панино,<br>Дальняя улица, 100А</div>
+    </div>
+  </div>
+  <div class="site-footer__bottom"><a href="privacy.html">Политика конфиденциальности</a></div>
+  <div class="site-footer__copy">© 2010–2026 ИП Данилова А.С.</div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/catalog.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Local Claude Code tooling config — machine-specific, not part of the site
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db

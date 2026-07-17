@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIPRASSADA — рассада, которая приживается</title>
+<meta name="description" content="Выращиваем рассаду овощей, зелени и цветов сами, без перекупки. Более 120 сортов, доставка день в день по Московской области.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="site-header__logo">VIPRASSADA</a>
+  <nav class="site-header__nav">
+    <a href="catalog.html">Каталог</a>
+    <a href="#about">О нас</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+  <button class="btn btn-outline site-header__call desktop-only">Позвонить</button>
+  <button class="site-header__menu-btn" data-menu-toggle aria-label="Меню">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+</header>
+
+<div class="site-header__overlay" data-menu-overlay></div>
+<div class="site-header__mobile-panel">
+  <a href="catalog.html" data-menu-close>Каталог</a>
+  <a href="#about" data-menu-close>О нас</a>
+  <a href="#contacts" data-menu-close>Контакты</a>
+  <button class="btn btn-primary">Позвонить</button>
+</div>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <svg class="hero__deco hero__deco--top" width="640" height="640" viewBox="0 0 24 24" fill="none" stroke-width="0.7"><path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 13c0-3-3-5-6-5 0 3 3 5 6 5z"/></svg>
+    <svg class="hero__deco hero__deco--bottom" width="480" height="480" viewBox="0 0 24 24" fill="none" stroke-width="0.6"><circle cx="12" cy="7" r="3.4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+    <div class="hero__content">
+      <div class="hero__eyebrow">Сезон 2026 открыт</div>
+      <h1 class="hero__title">Рассада, которая<br>приживается</h1>
+      <p class="hero__lead">Выращиваем сами, без перекупки. Более 120 сортов овощей, зелени и цветов — с доставкой день в день.</p>
+      <div class="hero__actions">
+        <button class="btn btn-light">Позвонить</button>
+        <a href="catalog.html" class="hero__link">Смотреть каталог →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Категории -->
+  <section class="section">
+    <div class="section__head">
+      <h2 class="section__title">Категории</h2>
+      <p class="section__subtitle">Всё для вашего сада и подоконника</p>
+    </div>
+
+    <a href="catalog.html?category=rassada-tomatov" class="category-feature" style="background-image:url('https://static.tildacdn.com/stor3438-6563-4562-b263-336536663464/29358024.jpg')">
+      <div class="category-feature__label"><span>Рассада томатов</span></div>
+    </a>
+
+    <div class="category-grid">
+      <a href="catalog.html?category=rassada-odnoletnih-rasteniy" class="category-card" style="background-image:url('https://static.tildacdn.com/stor6134-3038-4834-a561-386135663962/49516063.jpg')">
+        <div class="category-card__label"><span>Однолетние растения</span></div>
+      </a>
+      <a href="catalog.html?category=rassada-ovoschey" class="category-card" style="background-image:url('https://static.tildacdn.com/tild6263-3566-4666-a461-383764663061/photo.jpeg')">
+        <div class="category-card__label"><span>Овощи</span></div>
+      </a>
+      <a href="catalog.html?category=pryanye-travy" class="category-card" style="background-image:url('https://static.tildacdn.com/stor3163-6338-4639-a534-343934353935/79765410.jpg')">
+        <div class="category-card__label"><span>Пряные травы</span></div>
+      </a>
+      <a href="catalog.html?category=ampelnye-rasteniya" class="category-card" style="background-image:url('https://static.tildacdn.com/stor3531-3963-4438-b066-646538356630/60813004.jpg')">
+        <div class="category-card__label"><span>Ампельные растения</span></div>
+      </a>
+    </div>
+
+    <div class="section__cta">
+      <a href="catalog.html" class="btn btn-outline">Перейти в каталог</a>
+    </div>
+  </section>
+
+  <!-- Как мы работаем -->
+  <section class="section">
+    <div class="section__head">
+      <h2 class="section__title">Как мы работаем</h2>
+      <p class="section__subtitle">Четыре простых шага от выбора до урожая</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 13c0-3-3-5-6-5 0 3 3 5 6 5z"/></svg></div>
+        <div class="step__body">
+          <div class="step__title">Выбираете рассаду</div>
+          <div class="step__desc">В каталоге на сайте или у нас в теплице</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/><path d="M12 12v8"/></svg></div>
+        <div class="step__body">
+          <div class="step__title">Оформляете заказ</div>
+          <div class="step__desc">Звонком или заявкой на сайте</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 16V7h11v9"/><path d="M12 10h5l3 3v3h-8z"/><circle cx="5.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/></svg></div>
+        <div class="step__body">
+          <div class="step__title">Забираете или доставка</div>
+          <div class="step__desc">В день заказа по городу</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg></div>
+        <div class="step__body">
+          <div class="step__title">Растите с удовольствием</div>
+          <div class="step__desc">С нашими советами по уходу</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- О нас -->
+  <section class="section about" id="about">
+    <div class="about__media">
+      <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#2D5A3D" stroke-width="0.9"><path d="M12 21v-8"/><path d="M12 13c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 13c0-3-3-5-6-5 0 3 3 5 6 5z"/></svg>
+    </div>
+    <div>
+      <div class="about__eyebrow">О нас</div>
+      <h2 class="about__title">Питомник, который начался с одного подоконника</h2>
+      <p class="about__text">В 2014 году мы выращивали рассаду томатов для соседей по даче — сегодня VIPRASSADA это три теплицы под Москвой и больше 120 сортов овощей, зелени и цветов.</p>
+      <p class="about__text">Мы принципиально не перекупаем чужую рассаду: каждый лоток проходит полный цикл в наших теплицах, от семени до крепкого растения с закрытой корневой системой — так оно легче приживается на новом месте.</p>
+      <div class="about__stats">
+        <div>
+          <div class="about__stat-value">2014</div>
+          <div class="about__stat-label">год основания</div>
+        </div>
+        <div>
+          <div class="about__stat-value">120+</div>
+          <div class="about__stat-label">сортов растений</div>
+        </div>
+        <div>
+          <div class="about__stat-value">3</div>
+          <div class="about__stat-label">теплицы</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Карта -->
+  <section class="section">
+    <a href="https://yandex.com/maps/org/vip_rassada/104958653069/?ll=38.199546%2C55.388522&z=16" target="_blank" rel="noopener" class="map-card">
+      <div class="map-card__pin">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#2D5A3D"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/></svg>
+        <div class="map-card__text">Московская область, Раменский г.о., д. Панино</div>
+      </div>
+      <div class="map-card__link">Открыть в Яндекс.Картах ↗</div>
+    </a>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer" id="contacts">
+  <div class="site-footer__top">
+    <div>
+      <div class="site-footer__brand">VIPRASSADA</div>
+      <div class="site-footer__desc">Выращиваем крепкую рассаду овощей, трав и цветов с 2014 года. Без перекупки — только своя теплица.</div>
+    </div>
+    <div>
+      <div class="site-footer__label">Контакты</div>
+      <div class="site-footer__contacts">+7 (916) 001-22-37<br>+7 (929) 767-50-20<br>+7 (926) 970-76-86<br>info@viprassada.ru</div>
+    </div>
+    <div>
+      <div class="site-footer__label">Адрес</div>
+      <div class="site-footer__address">Московская область,<br>Раменский г.о., д. Панино,<br>Дальняя улица, 100А</div>
+    </div>
+  </div>
+  <div class="site-footer__bottom"><a href="privacy.html">Политика конфиденциальности</a></div>
+  <div class="site-footer__copy">© 2010–2026 ИП Данилова А.С.</div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
