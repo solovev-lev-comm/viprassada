@@ -6,6 +6,7 @@
   --color-primary: #2D5A3D;
   --color-primary-hover: #24492F;
   --color-accent: #E8834A;
+  --color-accent-hover: #D9723A;
   --color-bg: #FAF8F5;
   --color-surface: #FFFFFF;
   --color-text: #1F2A24;
@@ -142,14 +143,6 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
   background: rgba(250, 248, 245, 0.85);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
-  transform: translateY(0);
-  transition: transform 0.25s ease;
-}
-
-/* Smart header: slid out of view via transform (not display:none) so the
-   fixed element keeps its layout box and the transition stays smooth. */
-.site-header--hidden {
-  transform: translateY(-100%);
 }
 
 .site-header__logo {
@@ -525,12 +518,16 @@ body.menu-open .site-header__overlay {
 .map-card {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 9;
+  height: 420px;
   border-radius: var(--radius-card);
   overflow: hidden;
   background: linear-gradient(135deg, #E4EEE7, #F2EFE9 60%, #FBE8D9);
   cursor: pointer;
   transition: all 0.2s;
+}
+
+@media (max-width: 900px) {
+  .map-card { height: 200px; }
 }
 .map-card__pin {
   position: absolute; inset: 0;
@@ -549,7 +546,7 @@ body.menu-open .site-header__overlay {
    ========================================================================== */
 
 .page-head { padding: 48px var(--gutter-desktop) 0; }
-.page-head__title { font-weight: 600; font-size: 40px; margin: 0 0 4px; }
+.page-head__title { font-weight: 600; font-size: 40px; margin: 0 0 12px; }
 .page-head__meta { color: var(--color-text-secondary); font-size: 15px; }
 
 .breadcrumb-back {
@@ -564,6 +561,8 @@ body.menu-open .site-header__overlay {
 @media (max-width: 900px) {
   .page-head { padding: 24px var(--gutter-mobile) 0; }
   .page-head__title { font-size: 28px; }
+  /* Catalog only: title + count read as one tight group on mobile. */
+  .page-head--catalog .page-head__title { margin-bottom: 8px; }
 }
 
 /* ==========================================================================
@@ -698,7 +697,7 @@ body.menu-open .site-header__overlay {
 }
 
 @media (max-width: 900px) {
-  .catalog-layout { grid-template-columns: 1fr; gap: 0; padding: 0 var(--gutter-mobile) 40px; }
+  .catalog-layout { grid-template-columns: 1fr; gap: 0; padding: 24px var(--gutter-mobile) 40px; }
   .filters-toggle-btn { display: flex; }
   .filters {
     display: none;
@@ -715,9 +714,15 @@ body.menu-open .site-header__overlay {
   .filters__close {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
   }
+  .filters__close-title {
+    font-family: var(--font-heading); font-weight: 600; font-size: 20px;
+    color: var(--color-text); margin: 0; line-height: 1;
+  }
   .filters__close-btn {
+    display: flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border);
-    background: transparent; font-size: 15px; color: var(--color-text); cursor: pointer;
+    background: transparent; font-size: 15px; line-height: 1; color: var(--color-text); cursor: pointer;
+    padding: 0;
   }
   .filters__apply { display: block; width: 100%; margin-top: 8px; }
   body.filters-open .filters { display: block; }
@@ -852,6 +857,10 @@ body.menu-open .site-header__menu-icon--close {
 @media (hover: hover) and (pointer: fine) {
   a:hover { color: var(--color-accent); }
 
+  /* These links keep their own color on hover instead of turning accent. */
+  .site-header__logo:hover { color: var(--color-primary); }
+  .product-card:hover { color: var(--color-primary); }
+
   .btn-primary:hover { background: var(--color-primary-hover); color: var(--color-bg); transform: translateY(-1px); }
   .btn-outline:hover { background: var(--color-primary); color: var(--color-bg); }
   .btn-light:hover { background: #F4EFE8; color: var(--color-primary); transform: translateY(-1px); }
@@ -868,6 +877,106 @@ body.menu-open .site-header__menu-icon--close {
 
   .breadcrumb-back:hover { gap: 10px; color: var(--color-primary); }
   .breadcrumb-trail a:hover { color: var(--color-accent); }
+
+  .cookie-banner__decline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .cookie-banner__accept:hover { background: var(--color-accent-hover); }
+}
+
+/* ==========================================================================
+   Cookie consent banner
+   Injected into the DOM by main.js on first visit (see assets/js/main.js).
+   Shown/hidden via the --visible modifier so it can transition in/out
+   instead of popping. Fixed at the bottom, above everything else.
+   ========================================================================== */
+
+.cookie-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 200;
+  width: calc(100% - 48px);
+  max-width: 920px;
+  box-sizing: border-box;
+  background: var(--color-surface);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(31, 42, 36, 0.16);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 16px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.cookie-banner--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.cookie-banner__text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--color-text);
+  max-width: 520px;
+}
+.cookie-banner__text a { text-decoration: underline; }
+
+.cookie-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cookie-banner__decline,
+.cookie-banner__accept {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.cookie-banner__decline {
+  color: var(--color-text);
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  padding: 12px 24px;
+}
+.cookie-banner__accept {
+  color: var(--color-bg);
+  background: var(--color-accent);
+  border: none;
+  padding: 12px 26px;
+}
+
+@media (max-width: 900px) {
+  .cookie-banner {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    max-width: none;
+    border-radius: 18px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    transform: translateY(16px);
+  }
+  .cookie-banner--visible { transform: translateY(0); }
+  .cookie-banner__text { font-size: 13px; max-width: none; }
+  .cookie-banner__actions { gap: 10px; }
+  .cookie-banner__decline,
+  .cookie-banner__accept {
+    flex: 1;
+    padding: 11px;
+    font-size: 13px;
+    text-align: center;
+  }
 }
 
 /* ==========================================================================
