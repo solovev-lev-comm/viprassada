@@ -30,6 +30,8 @@
 
   --header-height: 60px;
   --header-height-mobile: 52px;
+  --topbar-height: 40px;
+  --topbar-height-mobile: 34px;
 }
 
 * { box-sizing: border-box; }
@@ -38,7 +40,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  padding-top: var(--header-height);
+  padding-top: calc(var(--topbar-height) + var(--header-height));
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
@@ -46,17 +48,17 @@ body {
 }
 
 @media (max-width: 900px) {
-  body { padding-top: var(--header-height-mobile); }
+  body { padding-top: calc(var(--topbar-height-mobile) + var(--header-height-mobile)); }
 }
 
 a { color: var(--color-primary); text-decoration: none; -webkit-tap-highlight-color: transparent; }
 
 /* Keeps in-page anchor links (nav "О нас" / "Контакты") from landing
    under the fixed header. */
-[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
+[id] { scroll-margin-top: calc(var(--topbar-height) + var(--header-height) + 16px); }
 
 @media (max-width: 900px) {
-  [id] { scroll-margin-top: calc(var(--header-height-mobile) + 16px); }
+  [id] { scroll-margin-top: calc(var(--topbar-height-mobile) + var(--header-height-mobile) + 16px); }
 }
 
 img { max-width: 100%; display: block; }
@@ -126,12 +128,72 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 .badge-preorder { color: var(--color-badge-preorder-text); background: var(--color-badge-preorder-bg); }
 
 /* ==========================================================================
+   Topbar — thin utility strip above the header: hours + contacts,
+   visible at a glance on every page. Fixed and stacked directly above
+   .site-header (see --topbar-height / --topbar-height-mobile).
+   ========================================================================== */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 51;
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 var(--gutter-desktop);
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.topbar__hours,
+.topbar__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.topbar__hours { opacity: 0.92; }
+
+.topbar__contacts {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.topbar__contact {
+  color: var(--color-bg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar__icon { flex-shrink: 0; opacity: 0.85; }
+
+@media (max-width: 900px) {
+  .topbar {
+    height: var(--topbar-height-mobile);
+    padding: 0 var(--gutter-mobile);
+    font-size: 11.5px;
+    gap: 12px;
+  }
+  .topbar__contacts { gap: 14px; }
+  .topbar__contact--email { display: none; }
+}
+
+/* ==========================================================================
    Header
    ========================================================================== */
 
 .site-header {
   position: fixed;
-  top: 0;
+  top: var(--topbar-height);
   left: 0;
   right: 0;
   z-index: 50;
@@ -186,7 +248,7 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 .site-header__mobile-panel {
   display: flex;
   position: fixed;
-  top: var(--header-height-mobile);
+  top: calc(var(--topbar-height-mobile) + var(--header-height-mobile));
   left: 0;
   right: 0;
   z-index: 45;
@@ -208,7 +270,7 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 .site-header__overlay {
   display: block;
   position: fixed;
-  top: var(--header-height-mobile);
+  top: calc(var(--topbar-height-mobile) + var(--header-height-mobile));
   left: 0;
   right: 0;
   bottom: 0;
@@ -232,7 +294,7 @@ body.menu-open .site-header__overlay {
 }
 
 @media (max-width: 900px) {
-  .site-header { height: var(--header-height-mobile); padding: 0 var(--gutter-mobile); }
+  .site-header { top: var(--topbar-height-mobile); height: var(--header-height-mobile); padding: 0 var(--gutter-mobile); }
   .site-header__logo { font-size: 17px; }
   .site-header__nav, .site-header__call.desktop-only { display: none; }
   .site-header__menu-btn { display: flex; }
@@ -583,7 +645,7 @@ body.menu-open .site-header__overlay {
   border-radius: var(--radius-card);
   padding: 24px;
   position: sticky;
-  top: calc(var(--header-height) + 20px);
+  top: calc(var(--topbar-height) + var(--header-height) + 20px);
 }
 .filters__title { font-weight: 700; font-size: 15px; margin-bottom: 16px; }
 .filters__group { margin-bottom: 32px; }
@@ -593,7 +655,44 @@ body.menu-open .site-header__overlay {
   display: flex; align-items: center; gap: 10px;
   font-size: 14px; cursor: pointer; margin-bottom: 12px;
 }
-.filters__checkbox input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+.filters__checkbox input { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--color-primary); }
+
+/* Категория "Рассада томатов" — раскрывающиеся подкатегории (грунт) */
+.filters__category-item { margin-bottom: 12px; }
+.filters__category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.filters__category-row .filters__checkbox { margin-bottom: 0; flex: 1; min-width: 0; }
+
+.filters__expand-btn {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: none; padding: 0; cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.filters__expand-btn--open { transform: rotate(180deg); color: var(--color-primary); }
+
+.filters__subcategories {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-left: 26px;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+.filters__subcategories--open { max-height: 120px; opacity: 1; }
+
+.filters__subcategories-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+.filters__checkbox--sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0; }
 
 .price-range { margin-bottom: 16px; }
 .price-range__inputs { display: flex; gap: 12px; }
@@ -735,8 +834,19 @@ body.menu-open .site-header__overlay {
   }
   .filters__checkbox input {
     width: 22px; height: 22px;
+    margin: 0;
     flex-shrink: 0;
   }
+  .filters__category-item { margin-bottom: 2px; }
+  /* Same horizontal padding as every other .filters__checkbox (12px 4px)
+     so the "Рассада томатов" checkbox lines up with its siblings — only
+     the vertical rhythm needs to match the row's flex layout. */
+  .filters__category-row .filters__checkbox { padding: 12px 4px; }
+  .filters__expand-btn { width: 32px; height: 32px; }
+  /* Aligns the sub-checkbox squares directly under the parent row's text
+     (checkbox width 22px + its 14px gap), not an eyeballed value. */
+  .filters__subcategories { margin-left: 36px; }
+  .filters__checkbox--sub { font-size: 14px; padding: 6px 0; margin: 0; }
   .availability-options button {
     padding: 14px 16px;
     font-size: 15px;
@@ -877,6 +987,8 @@ body.menu-open .site-header__menu-icon--close {
 
   .breadcrumb-back:hover { gap: 10px; color: var(--color-primary); }
   .breadcrumb-trail a:hover { color: var(--color-accent); }
+
+  .filters__expand-btn:hover { color: var(--color-primary); }
 
   .cookie-banner__decline:hover { border-color: var(--color-primary); color: var(--color-primary); }
   .cookie-banner__accept:hover { background: var(--color-accent-hover); }
