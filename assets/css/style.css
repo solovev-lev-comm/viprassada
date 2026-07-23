@@ -16,6 +16,8 @@
   --color-badge-stock-text: #2D5A3D;
   --color-badge-preorder-bg: #FBE8D9;
   --color-badge-preorder-text: #B85C1F;
+  --color-badge-ground-bg: #EBE3D2;
+  --color-badge-ground-text: #7A6A3E;
   --color-footer-bg: #1F2A24;
 
   --font-heading: 'Fraunces', serif;
@@ -126,6 +128,7 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 }
 .badge-stock { color: var(--color-badge-stock-text); background: var(--color-badge-stock-bg); }
 .badge-preorder { color: var(--color-badge-preorder-text); background: var(--color-badge-preorder-bg); }
+.badge-ground { color: var(--color-badge-ground-text); background: var(--color-badge-ground-bg); }
 
 /* ==========================================================================
    Topbar — thin utility strip above the header: hours + contacts,
@@ -342,7 +345,21 @@ body.menu-open .site-header__overlay {
 }
 
 .site-footer__contacts { font-size: 14px; line-height: 2; }
+.site-footer__email { color: var(--color-bg); }
 .site-footer__address { font-size: 14px; line-height: 1.8; }
+
+/* Full-width row so all three numbers fit side by side — the "Контакты"
+   grid column above is too narrow to hold them in one line. */
+.site-footer__phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(250, 248, 245, 0.15);
+  font-size: 15px;
+  font-weight: 700;
+}
+.site-footer__phones a { color: var(--color-bg); }
 
 .site-footer__bottom { padding-top: 24px; font-size: 13px; }
 .site-footer__bottom a { color: var(--color-bg); text-decoration: underline; }
@@ -362,7 +379,9 @@ body.menu-open .site-header__overlay {
 .hero {
   position: relative;
   height: 760px;
-  background: var(--color-primary);
+  background: linear-gradient(180deg, rgba(30, 61, 42, 0.75), rgba(30, 61, 42, 0.55)), url('../img/hero-tomatoes.jpg');
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -370,10 +389,6 @@ body.menu-open .site-header__overlay {
   justify-content: center;
   text-align: center;
 }
-
-.hero__deco { position: absolute; opacity: 0.45; stroke: #3E7350; }
-.hero__deco--top { top: -100px; right: -140px; }
-.hero__deco--bottom { bottom: -120px; left: -120px; }
 
 .hero__content {
   position: relative;
@@ -399,27 +414,16 @@ body.menu-open .site-header__overlay {
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--color-bg);
-  margin: 0 0 24px;
-}
-
-.hero__lead {
-  font-weight: 500;
-  font-size: 19px;
-  color: var(--color-bg);
-  opacity: 0.85;
-  max-width: 520px;
   margin: 0 0 40px;
-  line-height: 1.5;
 }
 
 .hero__actions { display: flex; align-items: center; gap: 24px; }
-.hero__link { font-size: 15px; font-weight: 700; color: var(--color-bg); display: inline-flex; align-items: center; gap: 8px; transition: gap 0.15s; }
+.hero__link { font-size: 15px; font-weight: 700; color: var(--color-bg); display: inline-flex; align-items: center; gap: 8px; transition: gap 0.15s, transform 0.15s; }
 
 @media (max-width: 900px) {
   .hero { height: 520px; }
   .hero__content { padding: 0 24px; }
-  .hero__title { font-size: 38px; margin-bottom: 16px; }
-  .hero__lead { font-size: 15px; margin-bottom: 28px; }
+  .hero__title { font-size: 38px; margin-bottom: 28px; }
   .hero__actions { flex-direction: column; gap: 16px; }
 }
 
@@ -744,12 +748,20 @@ body.menu-open .site-header__overlay {
   background-color: var(--color-border);
   flex-shrink: 0;
 }
+.product-card__photo--placeholder,
+.product-main__photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: rgba(250, 248, 245, 0.85);
+}
 .product-card__body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
 .product-card__name { font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.35; }
 .product-card__category { color: var(--color-text-secondary); font-size: 12px; margin-bottom: 12px; }
 .product-card__prices { display: flex; flex-direction: column; gap: 2px; margin-top: auto; margin-bottom: 12px; }
-.product-card__price-old { color: var(--color-text-secondary); font-size: 13px; text-decoration: line-through; }
 .product-card__price { font-family: var(--font-heading); font-weight: 600; font-size: 20px; }
+.product-card__badges { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .empty-state { padding: 64px 0; text-align: center; color: var(--color-text-secondary); font-size: 15px; }
 
@@ -856,6 +868,7 @@ body.menu-open .site-header__overlay {
   .product-card__photo { height: 130px; }
   .product-card__body { padding: 12px; }
   .product-card__name { font-size: 13px; }
+  .product-card__badges .badge { font-size: 11px; padding: 5px 10px; }
 }
 
 /* ==========================================================================
@@ -882,7 +895,7 @@ body.menu-open .site-header__overlay {
 .product-main__info { display: flex; flex-direction: column; }
 .product-main__category { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px; }
 .product-main__title { font-weight: 600; font-size: 40px; line-height: 1.1; margin: 0 0 20px; }
-.product-main__badge { margin-bottom: 28px; }
+.product-main__badge { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
 
 .product-main__price-block {
   display: flex; flex-direction: column; gap: 4px;
@@ -891,7 +904,6 @@ body.menu-open .site-header__overlay {
   border-bottom: 1px solid var(--color-border);
 }
 .product-main__price { font-family: var(--font-heading); font-weight: 600; font-size: 34px; }
-.product-main__price-old { color: var(--color-text-secondary); font-size: 15px; text-decoration: line-through; margin-right: 8px; }
 .product-main__meta { color: var(--color-text-secondary); font-size: 15px; }
 
 .product-main__specs { display: flex; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -912,6 +924,82 @@ body.menu-open .site-header__overlay {
   .product-main__price { font-size: 26px; }
   .related { padding: 40px 20px; }
   .related__title { font-size: 22px; margin-bottom: 20px; }
+}
+
+/* ==========================================================================
+   Price list page
+   ========================================================================== */
+
+.pricelist-page { padding: 32px var(--gutter-desktop) 80px; max-width: 900px; }
+
+.pricelist-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+.pricelist-toolbar__count { color: var(--color-text-secondary); font-size: 14px; }
+.pricelist-downloads { display: flex; gap: 12px; flex-wrap: wrap; }
+.pricelist-downloads .btn { font-size: 13px; padding: 10px 20px; }
+
+.pricelist__group { margin-bottom: 40px; }
+.pricelist__group:last-child { margin-bottom: 0; }
+.pricelist__category {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--color-primary);
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.pricelist__rows { display: flex; flex-direction: column; }
+.pricelist__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+.pricelist__name { font-weight: 600; font-size: 15px; }
+.pricelist__note {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-badge-preorder-text);
+}
+.pricelist__price { font-family: var(--font-heading); font-weight: 600; font-size: 16px; white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .pricelist-page { padding: 20px 20px 40px; }
+  .pricelist-toolbar { margin-bottom: 24px; padding-bottom: 20px; }
+  .pricelist-downloads { width: 100%; }
+  .pricelist-downloads .btn { flex: 1; }
+  .pricelist__category { font-size: 18px; }
+  .pricelist__name { font-size: 14px; }
+  .pricelist__price { font-size: 14px; }
+}
+
+/* Printing (the PDF "download" is the browser's native print dialog) —
+   strip everything but the price list itself down to plain paper-friendly
+   text; fixed header/footer chrome and buttons make no sense on a page. */
+@media print {
+  .topbar, .site-header, .site-header__overlay, .site-header__mobile-panel,
+  .site-footer, .pricelist-toolbar, .cookie-banner {
+    display: none !important;
+  }
+  body { padding-top: 0 !important; }
+  .page-head { padding: 0 0 16px; }
+  .pricelist-page { padding: 0; max-width: none; }
+  .pricelist__group { break-inside: avoid; }
+  .pricelist__row { color: #000; }
 }
 
 /* ==========================================================================
@@ -970,6 +1058,9 @@ body.menu-open .site-header__menu-icon--close {
   /* These links keep their own color on hover instead of turning accent. */
   .site-header__logo:hover { color: var(--color-primary); }
   .product-card:hover { color: var(--color-primary); }
+  .topbar__contact:hover { color: var(--color-bg); text-decoration: underline; }
+  .pricelist__row:hover { color: var(--color-primary); }
+  .pricelist__row:hover .pricelist__name { text-decoration: underline; }
 
   .btn-primary:hover { background: var(--color-primary-hover); color: var(--color-bg); transform: translateY(-1px); }
   .btn-outline:hover { background: var(--color-primary); color: var(--color-bg); }
@@ -978,8 +1069,9 @@ body.menu-open .site-header__menu-icon--close {
   .site-header__nav a:hover { color: var(--color-primary); }
 
   .site-footer__bottom a:hover { color: var(--color-accent); }
+  .site-footer__phones a:hover, .site-footer__email:hover { color: var(--color-accent); text-decoration: underline; }
 
-  .hero__link:hover { gap: 12px; color: var(--color-bg); }
+  .hero__link:hover { gap: 12px; color: var(--color-bg); text-decoration: underline; transform: translateY(-1px); }
 
   .category-feature:hover { box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16); transform: translateY(-2px); }
   .category-card:hover { box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16); transform: translateY(-2px); }

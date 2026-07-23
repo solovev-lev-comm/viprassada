@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Каталог — VIPRASSADA</title>
-<meta name="description" content="Каталог рассады VIPRASSADA: томаты, овощи, капуста, клубника, зелень, однолетние растения и черенки. Фильтры по категориям, цене и наличию.">
+<title>Прайс-лист — VIPRASSADA</title>
+<meta name="description" content="Полный прайс-лист VIPRASSADA: рассада овощей, зелени, цветов и черенков с розничными и оптовыми ценами. Скачайте в Word, Excel или PDF.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -31,8 +31,8 @@
 <header class="site-header">
   <a href="index.html" class="site-header__logo">VIPRASSADA</a>
   <nav class="site-header__nav">
-    <a href="catalog.html" class="active">Каталог</a>
-    <a href="pricelist.html">Прайс-лист</a>
+    <a href="catalog.html">Каталог</a>
+    <a href="pricelist.html" class="active">Прайс-лист</a>
     <a href="index.html#about">О нас</a>
     <a href="index.html#contacts">Контакты</a>
   </nav>
@@ -53,70 +53,23 @@
 </div>
 
 <main>
-  <div class="page-head page-head--catalog">
-    <h1 class="page-head__title">Каталог</h1>
-    <div class="page-head__meta" data-total-count>Загрузка…</div>
+  <div class="page-head">
+    <h1 class="page-head__title">Прайс-лист</h1>
+    <p class="page-head__meta">Полный список рассады с ценами. Нажмите на название товара, чтобы открыть его карточку в новой вкладке.</p>
   </div>
 
-  <div class="catalog-layout">
-
-    <button class="filters-toggle-btn" data-filters-toggle type="button">
-      <span>Фильтры</span>
-      <span class="filters-toggle-btn__count" data-filters-count>0</span>
-    </button>
-
-    <aside class="filters">
-      <div class="filters__close">
-        <div class="filters__close-title">Фильтры</div>
-        <button class="filters__close-btn" data-filters-close type="button">×</button>
+  <div class="pricelist-page">
+    <div class="pricelist-toolbar">
+      <div class="pricelist-toolbar__count" data-pricelist-count>Загрузка…</div>
+      <div class="pricelist-downloads" data-pricelist-downloads>
+        <button type="button" class="btn btn-outline" data-download="word">Скачать Word</button>
+        <button type="button" class="btn btn-outline" data-download="excel">Скачать Excel</button>
+        <button type="button" class="btn btn-outline" data-download="pdf">Скачать PDF</button>
       </div>
+    </div>
 
-      <div class="filters__group">
-        <div class="filters__title">Категории</div>
-        <div data-category-list>
-          <!-- filled by JS -->
-        </div>
-      </div>
-
-      <div class="filters__group">
-        <div class="filters__title">Цена, ₽</div>
-        <div class="price-range">
-          <div class="price-range__inputs">
-            <input type="number" min="0" placeholder="от" data-price-min>
-            <input type="number" min="0" placeholder="до" data-price-max>
-          </div>
-        </div>
-      </div>
-
-      <div class="filters__group">
-        <div class="filters__title">Наличие</div>
-        <div class="availability-options" data-availability>
-          <button type="button" class="active" data-value="all">Все</button>
-          <button type="button" data-value="in_stock">В наличии</button>
-          <button type="button" data-value="preorder">Под заказ</button>
-        </div>
-      </div>
-
-      <button class="btn btn-primary filters__apply" data-filters-close type="button">Показать товары</button>
-    </aside>
-    <div class="filters-overlay" data-filters-close></div>
-
-    <div>
-      <div class="catalog-toolbar">
-        <div class="catalog-toolbar__title" data-catalog-title>Все товары</div>
-        <div class="catalog-toolbar__count" data-catalog-count></div>
-      </div>
-
-      <div class="search-box">
-        <span class="search-box__icon">⌕</span>
-        <input type="text" placeholder="Найти товар по названию" data-search>
-      </div>
-
-      <div class="product-grid" data-product-grid>
-        <!-- filled by JS -->
-      </div>
-
-      <nav class="pagination" data-pagination></nav>
+    <div class="pricelist" data-pricelist-root>
+      <div class="empty-state">Загрузка прайс-листа…</div>
     </div>
   </div>
 </main>
@@ -151,6 +104,6 @@
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/data.js"></script>
-<script src="assets/js/catalog.js"></script>
+<script src="assets/js/pricelist.js"></script>
 </body>
 </html>

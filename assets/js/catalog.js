@@ -1,6 +1,10 @@
 (function () {
   const PAGE_SIZE = 12;
   const TOMATO_SLUG = 'rassada-tomatov';
+  const TOMATO_GROUND_TYPES = [
+    { value: 'open', label: 'Открытый грунт' },
+    { value: 'closed', label: 'Закрытый грунт' },
+  ];
 
   const els = {
     totalCount: document.querySelector('[data-total-count]'),
@@ -28,7 +32,7 @@
     categories: [],
     products: [],
     selectedCategories: new Set(),
-    tomatoGrowingTypes: new Set(), // subset of {'open','closed'}; empty = both
+    tomatoGroundTypes: new Set(), // subset of {'open','closed'}; empty = none picked
     minPrice: null,
     maxPrice: null,
     availability: 'all',
@@ -39,7 +43,7 @@
   function updateFiltersCount() {
     let count = 0;
     if (state.selectedCategories.size > 0 && state.selectedCategories.size < state.categories.length) count++;
-    if (state.tomatoGrowingTypes.size === 1) count++;
+    if (state.tomatoGroundTypes.size > 0 && state.tomatoGroundTypes.size < TOMATO_GROUND_TYPES.length) count++;
     if (state.minPrice != null || state.maxPrice != null) count++;
     if (state.availability !== 'all') count++;
     if (els.filtersCount) els.filtersCount.textContent = String(count);
@@ -47,14 +51,12 @@
 
   // Single source of truth for the tomato category + grunt sub-filter.
   // The parent "Рассада томатов" checkbox only ever appears checked when
-  // BOTH sub-types are selected; picking just one leaves the parent
+  // BOTH ground types are selected; picking just one leaves the parent
   // unchecked, matching the checkbox-tree convention the client asked for.
-  function setTomatoScope(includeOpen, includeClosed) {
-    state.tomatoGrowingTypes = new Set();
-    if (includeOpen) state.tomatoGrowingTypes.add('open');
-    if (includeClosed) state.tomatoGrowingTypes.add('closed');
+  function setTomatoGroundTypes(selected) {
+    state.tomatoGroundTypes = selected;
 
-    if (state.tomatoGrowingTypes.size > 0) {
+    if (state.tomatoGroundTypes.size > 0) {
       state.selectedCategories.add(TOMATO_SLUG);
     } else {
       state.selectedCategories.delete(TOMATO_SLUG);
@@ -63,9 +65,9 @@
 
   function syncTomatoUI() {
     const parentCb = els.categoryList.querySelector(`[data-category-checkbox][value="${TOMATO_SLUG}"]`);
-    if (parentCb) parentCb.checked = state.tomatoGrowingTypes.size === 2;
+    if (parentCb) parentCb.checked = state.tomatoGroundTypes.size === TOMATO_GROUND_TYPES.length;
     els.categoryList.querySelectorAll('[data-growing-type]').forEach((cb) => {
-      cb.checked = state.tomatoGrowingTypes.has(cb.value);
+      cb.checked = state.tomatoGroundTypes.has(cb.value);
     });
   }
 
@@ -78,6 +80,12 @@
         </label>
       `;
     }
+
+    const groundTypeOptions = TOMATO_GROUND_TYPES.map(({ value, label }) => `
+      <label class="filters__checkbox filters__checkbox--sub">
+        <input type="checkbox" data-growing-type value="${value}"> ${VIPRASSADA.escapeHtml(label)}
+      </label>
+    `).join('');
 
     return `
       <div class="filters__category-item">
@@ -92,12 +100,7 @@
         </div>
         <div class="filters__subcategories" data-tomato-subcategories>
           <div class="filters__subcategories-inner">
-            <label class="filters__checkbox filters__checkbox--sub">
-              <input type="checkbox" data-growing-type value="open"> Открытый грунт
-            </label>
-            <label class="filters__checkbox filters__checkbox--sub">
-              <input type="checkbox" data-growing-type value="closed"> Закрытый грунт
-            </label>
+            ${groundTypeOptions}
           </div>
         </div>
       </div>
@@ -110,8 +113,8 @@
     els.categoryList.querySelectorAll('[data-category-checkbox]').forEach((cb) => {
       cb.addEventListener('change', () => {
         if (cb.value === TOMATO_SLUG) {
-          // Checking the parent selects both grunt types; unchecking clears them.
-          setTomatoScope(cb.checked, cb.checked);
+          // Checking the parent selects both ground types; unchecking clears them.
+          setTomatoGroundTypes(cb.checked ? new Set(TOMATO_GROUND_TYPES.map((t) => t.value)) : new Set());
           syncTomatoUI();
         } else if (cb.checked) {
           state.selectedCategories.add(cb.value);
@@ -136,9 +139,9 @@
 
     els.categoryList.querySelectorAll('[data-growing-type]').forEach((cb) => {
       cb.addEventListener('change', () => {
-        const wantOpen = cb.value === 'open' ? cb.checked : state.tomatoGrowingTypes.has('open');
-        const wantClosed = cb.value === 'closed' ? cb.checked : state.tomatoGrowingTypes.has('closed');
-        setTomatoScope(wantOpen, wantClosed);
+        const next = new Set(state.tomatoGroundTypes);
+        if (cb.checked) next.add(cb.value); else next.delete(cb.value);
+        setTomatoGroundTypes(next);
         syncTomatoUI();
         state.page = 1;
         render();
@@ -151,19 +154,15 @@
   function getFilteredProducts() {
     const search = state.search.trim().toLowerCase();
 
-    // NOTE: "Открытый грунт" / "Закрытый грунт" are functional, clickable
-    // sub-filters (state.tomatoGrowingTypes, synced UI) but don't
-    // narrow the product list yet — the catalog data has no per-product
-    // grunt classification. Once real tomato products are tagged with a
-    // "growingType" ('open' | 'closed' | 'both') field, re-enable this:
-    //
-    // const growingFilterActive = state.tomatoGrowingTypes.size === 1;
-    // const allowedGrowingType = growingFilterActive ? [...state.tomatoGrowingTypes][0] : null;
-    // ...and inside the filter below:
-    // if (growingFilterActive && p.category === TOMATO_SLUG && p.growingType !== allowedGrowingType && p.growingType !== 'both') return false;
+    // Picking just one ground type narrows the tomato results to that type
+    // (products marked "both" always stay visible); picking both or
+    // neither is equivalent to no ground-type filter at all.
+    const groundFilterActive = state.tomatoGroundTypes.size === 1;
+    const allowedGroundType = groundFilterActive ? [...state.tomatoGroundTypes][0] : null;
 
     return state.products.filter((p) => {
       if (state.selectedCategories.size > 0 && !state.selectedCategories.has(p.category)) return false;
+      if (groundFilterActive && p.category === TOMATO_SLUG && p.growingType !== allowedGroundType && p.growingType !== 'both') return false;
       if (state.minPrice != null && p.price < state.minPrice) return false;
       if (state.maxPrice != null && p.price > state.maxPrice) return false;
       if (state.availability === 'in_stock' && p.availability !== 'in_stock') return false;
@@ -256,7 +255,7 @@
       const categoryParam = params.get('category');
       if (categoryParam && state.categories.some((c) => c.slug === categoryParam)) {
         if (categoryParam === TOMATO_SLUG) {
-          setTomatoScope(true, true);
+          setTomatoGroundTypes(new Set(TOMATO_GROUND_TYPES.map((t) => t.value)));
         } else {
           state.selectedCategories.add(categoryParam);
         }

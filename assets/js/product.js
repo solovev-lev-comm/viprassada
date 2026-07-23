@@ -35,11 +35,8 @@
 
   function renderProduct(product, related) {
     document.title = `${product.title} — VIPRASSADA`;
-    const oldPriceHtml = product.oldPrice
-      ? `<span class="product-main__price-old">${VIPRASSADA.formatPrice(product.oldPrice)}</span>`
-      : '';
 
-    const specs = specHtml('Период цветения', product.bloomPeriod) + specHtml('Высота растения', product.height);
+    const specs = specHtml('Размер кассеты', product.trayUnit);
 
     root.innerHTML = `
       <div class="page-head">
@@ -50,21 +47,21 @@
       </div>
 
       <div class="product-main">
-        <div class="product-main__photo" style="background-image:url('${VIPRASSADA.escapeHtml(product.photo)}')"></div>
+        ${VIPRASSADA.productPhotoHtml(product.photo, 'product-main__photo')}
 
         <div class="product-main__info">
           <div class="product-main__category">${VIPRASSADA.escapeHtml(product.categoryName)}</div>
           <h1 class="product-main__title">${VIPRASSADA.escapeHtml(product.title)}</h1>
 
-          <div class="product-main__badge">${VIPRASSADA.availabilityBadgeHtml(product)}</div>
+          <div class="product-main__badge">${VIPRASSADA.availabilityBadgeHtml(product)}${VIPRASSADA.groundTypeBadgeHtml(product)}</div>
 
           <div class="product-main__price-block">
-            <span>${oldPriceHtml}<span class="product-main__price">${VIPRASSADA.formatPrice(product.price)}</span></span>
+            <span class="product-main__price">${VIPRASSADA.priceDisplayHtml(product)}</span>
           </div>
 
           ${specs ? `<div class="product-main__specs">${specs}</div>` : ''}
 
-          <p class="product-main__desc">${VIPRASSADA.escapeHtml(product.description)}</p>
+          ${product.description ? `<p class="product-main__desc">${VIPRASSADA.escapeHtml(product.description)}</p>` : ''}
 
           <button class="btn btn-primary">Позвонить по этому товару</button>
         </div>
