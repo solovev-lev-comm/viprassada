@@ -63,7 +63,7 @@
 
           ${product.description ? `<p class="product-main__desc">${VIPRASSADA.escapeHtml(product.description)}</p>` : ''}
 
-          <button class="btn btn-primary">Позвонить по этому товару</button>
+          <a href="tel:+79297675020" class="btn btn-primary">Позвонить по этому товару</a>
         </div>
       </div>
 

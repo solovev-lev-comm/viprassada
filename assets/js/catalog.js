@@ -262,20 +262,13 @@
         }
       }
 
-      // Пришли из поиска в шапке — подставляем название товара в местный
-      // поиск каталога, чтобы справа сразу оказался именно он.
-      const queryParam = params.get('q');
-      if (queryParam) {
-        state.search = queryParam;
-        els.search.value = queryParam;
-      }
-
       els.totalCount.textContent = `${state.products.length} ${pluralProducts(state.products.length)}`;
 
       renderCategoryList();
 
-      // Короткая подсветка категории, которую подставил поиск в шапке —
-      // видно, что фильтр применился сам, а не просто оказался отмечен.
+      // Короткая подсветка категории, пришедшей через ?category= (например,
+      // с плиток категорий на главной) — видно, что фильтр применился сам,
+      // а не просто оказался отмечен.
       if (categoryMatched) {
         const checkbox = els.categoryList.querySelector(`[data-category-checkbox][value="${categoryParam}"]`);
         const row = checkbox && checkbox.closest('.filters__checkbox');

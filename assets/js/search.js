@@ -1,7 +1,5 @@
 // Live search in the header search bar (all pages). Type-ahead dropdown of
-// matching products; clicking one jumps to the catalog with that product's
-// category pre-selected and its full name already typed into the catalog's
-// own search box.
+// matching products; clicking one jumps straight to that product's own page.
 //
 // On mobile the bar itself lives inside a full-screen overlay (opened by
 // the header's search icon, closed by its own back arrow) instead of a
@@ -11,7 +9,7 @@
   const inputs = document.querySelectorAll('.site-search__input');
   if (!inputs.length) return;
 
-  const MAX_RESULTS = 6;
+  const MAX_RESULTS = 30;
   const MOBILE_QUERY = '(max-width: 900px)';
 
   function isMobile() {
@@ -45,7 +43,7 @@
 
   function resultRowHtml(product) {
     return `
-      <button type="button" class="site-search__result" data-category="${VIPRASSADA.escapeHtml(product.category)}" data-title="${VIPRASSADA.escapeHtml(product.title)}">
+      <button type="button" class="site-search__result" data-id="${VIPRASSADA.escapeHtml(product.id)}">
         ${resultPhotoHtml(product)}
         <span class="site-search__result-body">
           <span class="site-search__result-name">${VIPRASSADA.escapeHtml(product.title)}</span>
@@ -55,11 +53,8 @@
     `;
   }
 
-  function goToCatalog(category, title) {
-    const params = new URLSearchParams();
-    if (category) params.set('category', category);
-    if (title) params.set('q', title);
-    window.location.href = 'catalog.html?' + params.toString();
+  function goToProduct(id) {
+    window.location.href = 'product.html?id=' + encodeURIComponent(id);
   }
 
   VIPRASSADA.loadData().then((data) => {
@@ -108,7 +103,7 @@
           const first = results.querySelector('.site-search__result');
           if (first) {
             e.preventDefault();
-            goToCatalog(first.getAttribute('data-category'), first.getAttribute('data-title'));
+            goToProduct(first.getAttribute('data-id'));
           }
         }
       });
@@ -116,7 +111,7 @@
       results.addEventListener('click', (e) => {
         const btn = e.target.closest('.site-search__result');
         if (!btn) return;
-        goToCatalog(btn.getAttribute('data-category'), btn.getAttribute('data-title'));
+        goToProduct(btn.getAttribute('data-id'));
       });
 
       document.addEventListener('click', (e) => {

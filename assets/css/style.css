@@ -351,6 +351,9 @@ span.site-header__dropdown-item { cursor: default; }
   right: 0;
   max-height: 420px;
   overflow-y: auto;
+  /* Without this, scrolling to the end of the list hands the rest of the
+     scroll gesture to the page underneath instead of just stopping. */
+  overscroll-behavior: contain;
   background: var(--color-surface);
   border-radius: 16px;
   box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16);
@@ -445,6 +448,12 @@ body.is-scrolled .site-search {
   padding: 0;
   margin-right: -16px;
 }
+/* The magnifying-glass glyph's ink (circle + diagonal handle) isn't
+   centered in its own 24x24 viewBox the way the hamburger's three
+   symmetric bars are — the handle pulls its visual weight down-right,
+   so next to the logo/burger it reads as sitting lower. Nudge it up to
+   compensate; the tap target itself is unaffected. */
+.site-header__search-btn svg { transform: translateY(-1px); }
 
 .site-header__mobile-panel {
   display: flex;
@@ -570,6 +579,12 @@ body.menu-open .site-header__overlay {
     cursor: pointer;
     padding: 0;
   }
+
+  /* iOS Safari auto-zooms the whole page on focus if an input's font-size
+     is under 16px — that's what pushed the back button off-screen and
+     allowed horizontal panning. 16px is the minimum that keeps it from
+     zooming at all. */
+  .site-search__input { font-size: 16px; }
 
   .site-search__results {
     position: fixed;
@@ -1086,9 +1101,12 @@ body.menu-open .site-header__overlay {
 .product-card__prices { display: flex; flex-direction: column; gap: 2px; margin-top: auto; margin-bottom: 12px; }
 .product-card__price { font-weight: 700; font-size: 16px; color: var(--color-text-secondary); }
 /* The badge pill's own horizontal padding (16px, see .badge) pushes its
-   text right of the flush-left name/category/price above it — pull the
-   whole row back by that same amount so the label text lines up. */
-.product-card__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-left: -16px; }
+   text right of the flush-left name/category/price above it. Pulling the
+   row back by the full 16px lines the text up exactly, but then the pill's
+   background overhangs all the way to the card's own edge with zero
+   breathing room — splitting the difference keeps both the text and the
+   pill comfortably close to that edge instead of favoring either one. */
+.product-card__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-left: -8px; }
 
 .empty-state { padding: 64px 0; text-align: center; color: var(--color-text-secondary); font-size: 15px; }
 
@@ -1222,7 +1240,7 @@ body.menu-open .site-header__overlay {
   .product-card__body { padding: 10px 4px 4px; }
   .product-card__name { font-size: 13px; }
   .product-card__price { font-size: 14px; }
-  .product-card__badges { margin-left: -10px; }
+  .product-card__badges { margin-left: -5px; }
   .product-card__badges .badge { font-size: 11px; padding: 5px 10px; }
 }
 
