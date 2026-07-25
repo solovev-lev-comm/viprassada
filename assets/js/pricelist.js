@@ -22,10 +22,17 @@
     `;
   }
 
-  function groupHtml(group) {
+  function groupHtml(group, isFirst) {
+    // Only the very first category spells out the "Опт / Розница" order —
+    // every price in the list below follows the same format, so repeating
+    // the label per category would be noise.
+    const priceHeader = isFirst ? '<span class="pricelist__price-header">Опт / Розница</span>' : '';
     return `
       <section class="pricelist__group">
-        <h2 class="pricelist__category">${VIPRASSADA.escapeHtml(group.name)}</h2>
+        <div class="pricelist__category-row">
+          <h2 class="pricelist__category">${VIPRASSADA.escapeHtml(group.name)}</h2>
+          ${priceHeader}
+        </div>
         <div class="pricelist__rows">
           ${group.products.map(rowHtml).join('')}
         </div>
@@ -34,7 +41,7 @@
   }
 
   function render() {
-    root.innerHTML = groups.map(groupHtml).join('');
+    root.innerHTML = groups.map((group, i) => groupHtml(group, i === 0)).join('');
   }
 
   // --- Downloads ---------------------------------------------------------

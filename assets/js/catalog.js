@@ -253,7 +253,8 @@
 
       const params = new URLSearchParams(window.location.search);
       const categoryParam = params.get('category');
-      if (categoryParam && state.categories.some((c) => c.slug === categoryParam)) {
+      const categoryMatched = categoryParam && state.categories.some((c) => c.slug === categoryParam);
+      if (categoryMatched) {
         if (categoryParam === TOMATO_SLUG) {
           setTomatoGroundTypes(new Set(TOMATO_GROUND_TYPES.map((t) => t.value)));
         } else {
@@ -261,9 +262,28 @@
         }
       }
 
+      // Пришли из поиска в шапке — подставляем название товара в местный
+      // поиск каталога, чтобы справа сразу оказался именно он.
+      const queryParam = params.get('q');
+      if (queryParam) {
+        state.search = queryParam;
+        els.search.value = queryParam;
+      }
+
       els.totalCount.textContent = `${state.products.length} ${pluralProducts(state.products.length)}`;
 
       renderCategoryList();
+
+      // Короткая подсветка категории, которую подставил поиск в шапке —
+      // видно, что фильтр применился сам, а не просто оказался отмечен.
+      if (categoryMatched) {
+        const checkbox = els.categoryList.querySelector(`[data-category-checkbox][value="${categoryParam}"]`);
+        const row = checkbox && checkbox.closest('.filters__checkbox');
+        if (row) {
+          row.classList.add('filters__checkbox--highlight');
+          row.addEventListener('animationend', () => row.classList.remove('filters__checkbox--highlight'), { once: true });
+        }
+      }
 
       els.priceMin.addEventListener('input', () => {
         state.minPrice = els.priceMin.value ? Number(els.priceMin.value) : null;
@@ -291,6 +311,28 @@
         state.page = 1;
         render();
       });
+
+      // "Сбросить" в мобильном дровере — возвращает все фильтры к
+      // исходному состоянию, не закрывая панель (как у Кофемании).
+      const resetBtn = document.querySelector('[data-filters-reset]');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          state.selectedCategories.clear();
+          setTomatoGroundTypes(new Set());
+          state.minPrice = null;
+          state.maxPrice = null;
+          state.availability = 'all';
+          els.priceMin.value = '';
+          els.priceMax.value = '';
+          els.availability.querySelectorAll('button').forEach((b) => {
+            b.classList.toggle('active', b.getAttribute('data-value') === 'all');
+          });
+          els.categoryList.querySelectorAll('[data-category-checkbox]').forEach((cb) => { cb.checked = false; });
+          syncTomatoUI();
+          state.page = 1;
+          render();
+        });
+      }
 
       render();
     }).catch((err) => {

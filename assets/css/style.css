@@ -12,6 +12,7 @@
   --color-text: #1F2A24;
   --color-text-secondary: #6B7268;
   --color-border: #E3E0D8;
+  --color-search-fill: #F0EFEB;
   --color-badge-stock-bg: #E4EEE7;
   --color-badge-stock-text: #2D5A3D;
   --color-badge-preorder-bg: #FBE8D9;
@@ -19,6 +20,15 @@
   --color-badge-ground-bg: #EBE3D2;
   --color-badge-ground-text: #7A6A3E;
   --color-footer-bg: #1F2A24;
+  --color-yandex-red: #FC3F1D;
+  --color-telegram: #229ED9;
+  --color-telegram-bg: #E3F3FB;
+  --color-word: #2B579A;
+  --color-word-hover: #234674;
+  --color-excel: #21A366;
+  --color-excel-hover: #1B8552;
+  --color-pdf: #E5252A;
+  --color-pdf-hover: #C31E22;
 
   --font-heading: 'Fraunces', serif;
   --font-body: 'Manrope', sans-serif;
@@ -30,10 +40,10 @@
   --gutter-desktop: 64px;
   --gutter-mobile: 20px;
 
-  --header-height: 60px;
-  --header-height-mobile: 52px;
-  --topbar-height: 40px;
-  --topbar-height-mobile: 34px;
+  --header-height: 72px;
+  --header-height-mobile: 56px;
+  --search-height: 64px;
+  --mobile-search-row-height: 76px;
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +52,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  padding-top: calc(var(--topbar-height) + var(--header-height));
+  padding-top: calc(var(--header-height) + var(--search-height));
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
@@ -50,24 +60,30 @@ body {
 }
 
 @media (max-width: 900px) {
-  body { padding-top: calc(var(--topbar-height-mobile) + var(--header-height-mobile)); }
+  /* The mobile search bar is a full-screen overlay now (opened from the
+     header's search icon), not a permanent strip — no extra body offset
+     needed for it. */
+  body { padding-top: var(--header-height-mobile); }
 }
 
 a { color: var(--color-primary); text-decoration: none; -webkit-tap-highlight-color: transparent; }
 
 /* Keeps in-page anchor links (nav "О нас" / "Контакты") from landing
    under the fixed header. */
-[id] { scroll-margin-top: calc(var(--topbar-height) + var(--header-height) + 16px); }
+[id] { scroll-margin-top: calc(var(--header-height) + var(--search-height) + 16px); }
 
 @media (max-width: 900px) {
-  [id] { scroll-margin-top: calc(var(--topbar-height-mobile) + var(--header-height-mobile) + 16px); }
+  [id] { scroll-margin-top: calc(var(--header-height-mobile) + 16px); }
 }
 
 img { max-width: 100%; display: block; }
 
 button { font-family: var(--font-body); -webkit-tap-highlight-color: transparent; }
 
-h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
+/* Manrope is the project-wide typeface (client's call after the
+   Coffeemania-style pass) — Fraunces stays only on the logo, the footer
+   wordmark and the "О нас" stat numbers as brand accents. */
+h1, h2, h3 { font-family: var(--font-body); margin: 0; }
 
 .container {
   max-width: var(--container-max);
@@ -116,6 +132,24 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
   color: var(--color-primary);
 }
 
+.btn-accent {
+  background: var(--color-accent);
+  color: #FFFFFF;
+}
+
+.btn-yandex {
+  background: transparent;
+  color: var(--color-yandex-red);
+  border: 1.5px solid var(--color-yandex-red);
+  padding: 12.5px 32px;
+}
+
+/* Прайс-лист — кнопки скачивания в фирменных цветах форматов файлов. */
+.btn-word { background: var(--color-word); color: #fff; }
+.btn-excel { background: var(--color-excel); color: #fff; }
+.btn-pdf { background: var(--color-pdf); color: #fff; }
+.btn-word:active, .btn-excel:active, .btn-pdf:active { transform: scale(0.96); }
+
 .btn-block { display: flex; width: 100%; }
 
 .badge {
@@ -131,72 +165,12 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 .badge-ground { color: var(--color-badge-ground-text); background: var(--color-badge-ground-bg); }
 
 /* ==========================================================================
-   Topbar — thin utility strip above the header: hours + contacts,
-   visible at a glance on every page. Fixed and stacked directly above
-   .site-header (see --topbar-height / --topbar-height-mobile).
-   ========================================================================== */
-
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 51;
-  height: var(--topbar-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 0 var(--gutter-desktop);
-  background: var(--color-primary);
-  color: var(--color-bg);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.topbar__hours,
-.topbar__contact {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.topbar__hours { opacity: 0.92; }
-
-.topbar__contacts {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  min-width: 0;
-}
-
-.topbar__contact {
-  color: var(--color-bg);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.topbar__icon { flex-shrink: 0; opacity: 0.85; }
-
-@media (max-width: 900px) {
-  .topbar {
-    height: var(--topbar-height-mobile);
-    padding: 0 var(--gutter-mobile);
-    font-size: 11.5px;
-    gap: 12px;
-  }
-  .topbar__contacts { gap: 14px; }
-  .topbar__contact--email { display: none; }
-}
-
-/* ==========================================================================
    Header
    ========================================================================== */
 
 .site-header {
   position: fixed;
-  top: var(--topbar-height);
+  top: 0;
   left: 0;
   right: 0;
   z-index: 50;
@@ -205,17 +179,33 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
   justify-content: space-between;
   height: var(--header-height);
   padding: 0 var(--gutter-desktop);
-  background: rgba(250, 248, 245, 0.85);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: none;
+  transition: box-shadow 0.2s ease;
 }
 
 .site-header__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.site-header__logo-title {
   font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 22px;
+  font-weight: 700;
+  font-size: 27px;
+  letter-spacing: 0.02em;
   color: var(--color-primary);
-  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.site-header__logo-tagline {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  color: #C25E1B;
+  line-height: 1;
 }
 
 .site-header__nav {
@@ -223,57 +213,288 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
   gap: 40px;
 }
 
-.site-header__nav a {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text);
+/* The wider "1d" logo leaves less room for nav items than the old text
+   logo did; tighten the gap just in the narrow band above the mobile
+   breakpoint where the two would otherwise wrap onto two lines. */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .site-header__nav { gap: 20px; }
 }
-.site-header__nav a.active { color: var(--color-primary); }
+
+/* Direct-child selector on purpose: only the top-level links (Каталог,
+   Прайс-лист, О нас, Контакты) get the underline treatment — the nested
+   "Ещё" dropdown links (e.g. "Мы на карте") are excluded. */
+.site-header__nav > a {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+  padding-bottom: 6px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.18s ease;
+}
+.site-header__nav > a.active { border-bottom-color: var(--color-primary); }
+
+/* "Ещё" — выпадающая плашка (desktop) */
+.site-header__more { position: relative; }
+
+.site-header__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.site-header__more-btn svg { transition: transform 0.2s ease; }
+.site-header__more:hover .site-header__more-btn svg { transform: rotate(180deg); }
+
+.site-header__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* прозрачный "мостик", чтобы курсор не терял плашку по пути от кнопки */
+  padding-top: 18px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 55;
+}
+
+.site-header__more:hover .site-header__dropdown,
+.site-header__more:focus-within .site-header__dropdown {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-header__dropdown-card {
+  min-width: 220px;
+  padding: 10px 0;
+  background: var(--color-surface);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(31, 42, 36, 0.14);
+}
+
+.site-header__dropdown-item {
+  display: block;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+span.site-header__dropdown-item { cursor: default; }
 
 .site-header__call {
   font-size: 13px;
   padding: 9px 20px;
 }
 
+/* Строка поиска под шапкой (desktop; пока визуальная заглушка) */
+.site-search {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  z-index: 49;
+  display: flex;
+  align-items: center;
+  height: var(--search-height);
+  padding: 0 var(--gutter-desktop);
+  background: var(--color-surface);
+  transition: box-shadow 0.2s ease;
+}
+
+.site-search__box {
+  position: relative;
+  width: 100%;
+}
+
+.site-search__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 52px 0 20px;
+  background: var(--color-search-fill);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text);
+  outline: none;
+}
+.site-search__input::placeholder { color: var(--color-text-secondary); opacity: 0.8; }
+
+.site-search__icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+/* Back arrow for the mobile full-screen search overlay — not used on
+   desktop, where the search bar is just a permanent strip under the header. */
+.site-search__back { display: none; }
+
+/* Live search dropdown — built by assets/js/search.js */
+.site-search__results {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: 420px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16);
+  padding: 8px;
+  z-index: 1;
+}
+.site-search__results--open { display: block; }
+
+.site-search__result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: background-color 0.12s ease;
+}
+.site-search__result-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--color-search-fill);
+}
+.site-search__result-photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  opacity: 0.5;
+}
+.site-search__result-body { min-width: 0; }
+.site-search__result-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site-search__result-category { display: block; font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+
+.site-search__empty { padding: 16px 12px; font-size: 14px; color: var(--color-text-secondary); }
+
+/* Линия-разделитель с мягкой тенью появляется только при прокрутке —
+   на самом верху шапка и поиск сливаются с контентом без границы. */
+body.is-scrolled .site-search {
+  box-shadow: 0 1px 0 rgba(31, 42, 36, 0.14), 0 10px 28px rgba(31, 42, 36, 0.09);
+}
+
+@media (max-width: 900px) {
+  body.is-scrolled .site-header {
+    box-shadow: 0 1px 0 rgba(31, 42, 36, 0.14), 0 10px 28px rgba(31, 42, 36, 0.09);
+  }
+}
+
 .site-header__menu-btn {
   display: none;
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   align-items: center;
   justify-content: center;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
+  /* Optical alignment: the 28px icon is centered inside this 48px tap
+     target, which otherwise leaves it sitting visibly right of the page's
+     own left edge (Hero card, product grid, …) — nudge it back to match. */
+  margin-left: -12px;
+}
+
+.site-header__search-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  margin-right: -16px;
 }
 
 .site-header__mobile-panel {
   display: flex;
   position: fixed;
-  top: calc(var(--topbar-height-mobile) + var(--header-height-mobile));
+  top: var(--header-height-mobile);
   left: 0;
   right: 0;
+  bottom: 0;
   z-index: 45;
   background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-  padding: 32px 20px 28px;
+  padding: 28px 20px 32px;
   flex-direction: column;
-  gap: 24px;
-  box-shadow: 0 16px 32px rgba(31, 42, 36, 0.14);
-  opacity: 0;
-  transform: translateY(-12px);
-  pointer-events: none;
+  gap: 28px;
+  overflow-y: auto;
+  transform: translateX(-100%);
   visibility: hidden;
-  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+  transition: transform 0.28s ease, visibility 0s linear 0.28s;
 }
-.site-header__mobile-panel a { font-size: 20px; font-weight: 700; color: var(--color-text); }
 .site-header__mobile-panel .btn { margin-top: 8px; }
+
+.mobile-menu__contact-row {
+  display: flex;
+  align-items: stretch;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+.mobile-menu__contact-col { flex: 1; min-width: 0; }
+.mobile-menu__contact-divider { width: 1px; background: var(--color-border); margin: 0 16px; }
+.mobile-menu__contact-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
+.mobile-menu__contact-value { font-size: 15px; font-weight: 700; color: var(--color-primary); white-space: nowrap; }
+
+.mobile-menu__nav { display: flex; flex-direction: column; gap: 22px; }
+.mobile-menu__nav a { font-size: 20px; font-weight: 400; color: var(--color-text); }
+
+.mobile-menu__social { margin-top: auto; text-align: center; }
+.mobile-menu__social-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 14px; }
+.mobile-menu__social-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.mobile-menu__social-btn {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  color: var(--color-text);
+}
+.mobile-menu__social-btn--telegram { color: var(--color-telegram); border-color: var(--color-telegram-bg); background: var(--color-telegram-bg); }
 
 .site-header__overlay {
   display: block;
   position: fixed;
-  top: calc(var(--topbar-height-mobile) + var(--header-height-mobile));
+  top: var(--header-height-mobile);
   left: 0;
   right: 0;
   bottom: 0;
@@ -285,11 +506,9 @@ h1, h2, h3 { font-family: var(--font-heading); margin: 0; }
 }
 
 body.menu-open .site-header__mobile-panel {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+  transform: translateX(0);
   visibility: visible;
-  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0s;
+  transition: transform 0.28s ease, visibility 0s linear 0s;
 }
 body.menu-open .site-header__overlay {
   opacity: 1;
@@ -297,10 +516,73 @@ body.menu-open .site-header__overlay {
 }
 
 @media (max-width: 900px) {
-  .site-header { top: var(--topbar-height-mobile); height: var(--header-height-mobile); padding: 0 var(--gutter-mobile); }
-  .site-header__logo { font-size: 17px; }
+  .site-header {
+    top: 0;
+    height: var(--header-height-mobile);
+    padding: 0 var(--gutter-mobile);
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    align-items: center;
+  }
+  .site-header__logo { grid-column: 2; grid-row: 1; justify-self: center; align-items: center; }
+  .site-header__logo-title { font-size: 20px; }
+  .site-header__logo-tagline { font-size: 10px; }
   .site-header__nav, .site-header__call.desktop-only { display: none; }
-  .site-header__menu-btn { display: flex; }
+  .site-header__menu-btn { display: flex; grid-column: 1; grid-row: 1; justify-self: start; }
+  .site-header__search-btn { display: flex; grid-column: 3; grid-row: 1; justify-self: end; }
+
+  /* Full-screen search overlay — opened by the header search icon, closed
+     by its own back arrow. Sits at the very top of the viewport (z-index
+     above the header), so the header is fully covered while it's open,
+     not just the content below it. Hidden by default; only this top row
+     is fixed-height — .site-search__results (below) is a separate fixed
+     panel that fills the rest of the screen, so the two don't fight over
+     the same space. */
+  .site-search {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobile-search-row-height);
+    z-index: 70;
+    align-items: center;
+    gap: 10px;
+    padding: 0 var(--gutter-mobile);
+    background: var(--color-surface);
+  }
+  body.search-open .site-search { display: flex; }
+  /* One full-screen panel open at a time is enough, and it avoids the
+     menu and search overlays stacking on top of each other. */
+  body.menu-open .site-search { display: none; }
+
+  .site-search__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .site-search__results {
+    position: fixed;
+    top: var(--mobile-search-row-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8px var(--gutter-mobile);
+  }
+  .site-search__hint { padding: 16px 8px; font-size: 14px; color: var(--color-text-secondary); text-align: center; }
 }
 
 /* ==========================================================================
@@ -377,26 +659,25 @@ body.menu-open .site-header__overlay {
    ========================================================================== */
 
 .hero {
-  position: relative;
-  height: 760px;
-  background: linear-gradient(180deg, rgba(30, 61, 42, 0.75), rgba(30, 61, 42, 0.55)), url('../img/hero-tomatoes.jpg');
-  background-size: cover;
-  background-position: center;
+  padding: 24px var(--gutter-desktop) 0;
+}
+
+.hero__card {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  background: var(--color-surface);
+  border-radius: 24px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  min-height: 560px;
 }
 
 .hero__content {
-  position: relative;
-  padding: 0 40px;
+  padding: 72px 64px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 760px;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .hero__eyebrow {
@@ -404,27 +685,49 @@ body.menu-open .site-header__overlay {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #F2A876;
+  color: var(--color-accent);
   margin-bottom: 20px;
 }
 
 .hero__title {
-  font-weight: 600;
-  font-size: 72px;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--color-bg);
-  margin: 0 0 40px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin: 0 0 24px;
 }
 
-.hero__actions { display: flex; align-items: center; gap: 24px; }
-.hero__link { font-size: 15px; font-weight: 700; color: var(--color-bg); display: inline-flex; align-items: center; gap: 8px; transition: gap 0.15s, transform 0.15s; }
+.hero__text {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0 0 36px;
+  max-width: 460px;
+}
+
+.hero__actions { display: flex; align-items: center; gap: 16px; }
+
+.hero__media {
+  background: url('../img/hero-tomatoes.jpg') center / cover no-repeat;
+}
 
 @media (max-width: 900px) {
-  .hero { height: 520px; }
-  .hero__content { padding: 0 24px; }
-  .hero__title { font-size: 38px; margin-bottom: 28px; }
-  .hero__actions { flex-direction: column; gap: 16px; }
+  .hero { padding: 16px var(--gutter-mobile) 0; }
+  .hero__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    min-height: 0;
+  }
+  /* Фото сверху карточки, текст под ним */
+  .hero__media { order: -1; height: 240px; }
+  .hero__content { padding: 28px 20px 32px; }
+  .hero__eyebrow { margin-bottom: 14px; }
+  .hero__title { font-size: 34px; margin-bottom: 16px; }
+  .hero__text { font-size: 15px; margin-bottom: 28px; }
+  .hero__actions { flex-direction: column; align-items: stretch; width: 100%; gap: 12px; }
 }
 
 /* ==========================================================================
@@ -433,7 +736,7 @@ body.menu-open .site-header__overlay {
 
 .section { padding: 96px var(--gutter-desktop); border-bottom: 1px solid var(--color-border); }
 .section__head { text-align: center; margin-bottom: 56px; }
-.section__title { font-weight: 600; font-size: 36px; margin: 0 0 12px; }
+.section__title { font-family: var(--font-body); font-weight: 700; font-size: 36px; margin: 0 0 12px; letter-spacing: -0.01em; }
 .section__subtitle { color: var(--color-text-secondary); font-size: 16px; margin: 0; }
 
 @media (max-width: 900px) {
@@ -467,8 +770,8 @@ body.menu-open .site-header__overlay {
   box-sizing: border-box;
 }
 .category-feature__label span {
-  font-family: var(--font-heading);
-  font-weight: 600;
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 26px;
   color: var(--color-bg);
 }
@@ -516,65 +819,83 @@ body.menu-open .site-header__overlay {
    How it works (steps)
    ========================================================================== */
 
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.step { text-align: center; padding: 0 24px; border-right: 1px solid var(--color-border); }
-.step:last-child { border-right: none; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  padding: 18px;
+  background: var(--color-surface);
+  border-radius: 20px;
+}
 .step__icon {
-  width: 72px; height: 72px;
+  width: 48px; height: 48px;
   border-radius: 50%;
-  background: var(--color-badge-stock-bg);
-  margin: 0 auto 20px;
+  background: var(--color-search-fill);
+  margin: 0;
+  flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.step__icon svg { stroke: var(--color-primary); }
-.step__title { font-weight: 700; font-size: 17px; margin-bottom: 8px; }
-.step__desc { color: var(--color-text-secondary); font-size: 14px; line-height: 1.5; }
+.step__icon svg { width: 22px; height: 22px; stroke: var(--color-accent); }
+.step__body { min-width: 0; }
+.step__title { font-weight: 700; font-size: 14px; margin-bottom: 2px; line-height: 1.3; }
+.step__desc { color: var(--color-text-secondary); font-size: 12.5px; line-height: 1.4; }
 
 @media (max-width: 900px) {
-  .steps { display: flex; flex-direction: column; gap: 28px; }
-  .step { display: flex; gap: 16px; align-items: center; text-align: left; padding: 0; border-right: none; }
-  .step__icon { width: 56px; height: 56px; margin: 0; flex-shrink: 0; }
-  .step__icon svg { width: 26px; height: 26px; }
-  .step__body { display: flex; flex-direction: column; gap: 4px; }
+  .steps { grid-template-columns: 1fr; gap: 12px; }
+  .step { padding: 16px; border-radius: 18px; }
+  .step__icon { width: 52px; height: 52px; }
+  .step__icon svg { width: 24px; height: 24px; }
+  .step__title { font-size: 15px; }
+  .step__desc { font-size: 13px; }
 }
 
 /* ==========================================================================
    About section
    ========================================================================== */
 
-.about {
+.about__card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
+  grid-template-columns: 0.85fr 1.15fr;
+  background: var(--color-surface);
+  border-radius: 24px;
+  overflow: hidden;
 }
 .about__media {
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  height: 420px;
-  background: linear-gradient(135deg, #E4EEE7, #F2EFE9 60%, #FBE8D9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: var(--color-search-fill);
+  background-size: cover;
+  background-position: center;
+  min-height: 460px;
 }
-.about__media svg { opacity: 0.5; }
+.about__content { padding: 64px; display: flex; flex-direction: column; justify-content: center; }
 .about__eyebrow {
   font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--color-accent); margin-bottom: 16px;
 }
-.about__title { font-weight: 600; font-size: 36px; margin: 0 0 20px; line-height: 1.15; }
-.about__text { color: var(--color-text); opacity: 0.8; font-size: 16px; line-height: 1.7; margin: 0 0 20px; }
-.about__stats { display: flex; gap: 48px; }
-.about__stat-value { font-family: var(--font-heading); font-weight: 600; font-size: 32px; color: var(--color-primary); }
-.about__stat-label { color: var(--color-text-secondary); font-size: 14px; }
+.about__title { font-family: var(--font-body); font-weight: 700; font-size: 36px; margin: 0 0 20px; line-height: 1.15; letter-spacing: -0.01em; }
+.about__text { color: var(--color-text); opacity: 0.8; font-size: 16px; line-height: 1.7; margin: 0 0 20px; max-width: 480px; }
+.about__stats { display: flex; gap: 12px; margin-top: 8px; }
+.about__stat {
+  flex: 1;
+  text-align: center;
+  background: var(--color-bg);
+  border-radius: 16px;
+  padding: 18px 12px;
+}
+.about__stat-value { font-weight: 700; font-size: 26px; color: var(--color-primary); letter-spacing: -0.01em; }
+.about__stat-label { color: var(--color-text-secondary); font-size: 12.5px; margin-top: 4px; }
 
 @media (max-width: 900px) {
-  .about { grid-template-columns: 1fr; gap: 0; }
-  .about__media { height: 220px; margin-bottom: 24px; }
+  .about__card { grid-template-columns: 1fr; border-radius: 18px; }
+  .about__media { min-height: 220px; }
+  .about__content { padding: 28px 20px 32px; }
   .about__title { font-size: 24px; }
-  .about__text { font-size: 14px; }
-  .about__stats { gap: 32px; }
-  .about__stat-value { font-size: 24px; }
+  .about__text { font-size: 14px; max-width: none; }
+  .about__stats { gap: 8px; }
+  .about__stat { padding: 14px 8px; border-radius: 14px; }
+  .about__stat-value { font-size: 20px; }
+  .about__stat-label { font-size: 11px; }
 }
 
 /* ==========================================================================
@@ -583,28 +904,16 @@ body.menu-open .site-header__overlay {
 
 .map-card {
   position: relative;
-  display: block;
   height: 420px;
   border-radius: var(--radius-card);
   overflow: hidden;
-  background: linear-gradient(135deg, #E4EEE7, #F2EFE9 60%, #FBE8D9);
-  cursor: pointer;
-  transition: all 0.2s;
+  background: var(--color-border);
+  margin-bottom: 40px;
 }
+.map-card iframe { display: block; width: 100%; height: 100%; border: 0; }
 
 @media (max-width: 900px) {
-  .map-card { height: 200px; }
-}
-.map-card__pin {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-}
-.map-card__text { color: var(--color-text); font-weight: 600; font-size: 15px; }
-.map-card__link {
-  position: absolute; right: 16px; bottom: 16px;
-  font-size: 12px; font-weight: 600; color: var(--color-text);
-  background: rgba(250, 248, 245, 0.85); backdrop-filter: blur(4px);
-  border-radius: var(--radius-pill); padding: 7px 14px;
+  .map-card { height: 200px; margin-bottom: 24px; }
 }
 
 /* ==========================================================================
@@ -612,7 +921,7 @@ body.menu-open .site-header__overlay {
    ========================================================================== */
 
 .page-head { padding: 48px var(--gutter-desktop) 0; }
-.page-head__title { font-weight: 600; font-size: 40px; margin: 0 0 12px; }
+.page-head__title { font-weight: 700; font-size: 40px; margin: 0 0 12px; letter-spacing: -0.01em; }
 .page-head__meta { color: var(--color-text-secondary); font-size: 15px; }
 
 .breadcrumb-back {
@@ -630,6 +939,11 @@ body.menu-open .site-header__overlay {
   /* Catalog only: title + count read as one tight group on mobile. */
   .page-head--catalog .page-head__title { margin-bottom: 8px; }
 }
+
+/* Прайс-лист — узкая колонка текста, поэтому шапка страницы центрируется
+   в той же ширине (900px), что и .pricelist-page под ней, а не растягивается
+   на всю ширину экрана как у каталога. */
+.page-head--pricelist { max-width: 900px; margin: 0 auto; }
 
 /* ==========================================================================
    Catalog layout
@@ -649,7 +963,7 @@ body.menu-open .site-header__overlay {
   border-radius: var(--radius-card);
   padding: 24px;
   position: sticky;
-  top: calc(var(--topbar-height) + var(--header-height) + 20px);
+  top: calc(var(--header-height) + var(--search-height) + 20px);
 }
 .filters__title { font-weight: 700; font-size: 15px; margin-bottom: 16px; }
 .filters__group { margin-bottom: 32px; }
@@ -658,8 +972,17 @@ body.menu-open .site-header__overlay {
 .filters__checkbox {
   display: flex; align-items: center; gap: 10px;
   font-size: 14px; cursor: pointer; margin-bottom: 12px;
+  border-radius: 8px;
 }
 .filters__checkbox input { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--color-primary); }
+
+/* Briefly highlights the category a search-bar click preselected, so it's
+   obvious which filter just got applied instead of silently appearing checked. */
+@keyframes filters-highlight-pulse {
+  0%, 55% { background: var(--color-badge-stock-bg); }
+  100% { background: transparent; }
+}
+.filters__checkbox--highlight { animation: filters-highlight-pulse 1.3s ease; }
 
 /* Категория "Рассада томатов" — раскрывающиеся подкатегории (грунт) */
 .filters__category-item { margin-bottom: 12px; }
@@ -734,18 +1057,19 @@ body.menu-open .site-header__overlay {
 }
 
 .product-card {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  overflow: hidden;
+  border-radius: 16px;
+  padding: 10px;
   background: var(--color-surface);
   display: flex;
   flex-direction: column;
+  transition: background-color 0.15s ease;
 }
 .product-card__photo {
   height: 190px;
+  border-radius: 12px;
   background-size: cover;
   background-position: center;
-  background-color: var(--color-border);
+  background-color: var(--color-search-fill);
   flex-shrink: 0;
 }
 .product-card__photo--placeholder,
@@ -756,12 +1080,15 @@ body.menu-open .site-header__overlay {
   background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
   color: rgba(250, 248, 245, 0.85);
 }
-.product-card__body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
-.product-card__name { font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.35; }
+.product-card__body { padding: 14px 6px 6px; display: flex; flex-direction: column; flex: 1; }
+.product-card__name { font-weight: 600; font-size: 15px; margin-bottom: 4px; line-height: 1.35; color: var(--color-text); }
 .product-card__category { color: var(--color-text-secondary); font-size: 12px; margin-bottom: 12px; }
 .product-card__prices { display: flex; flex-direction: column; gap: 2px; margin-top: auto; margin-bottom: 12px; }
-.product-card__price { font-family: var(--font-heading); font-weight: 600; font-size: 20px; }
-.product-card__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.product-card__price { font-weight: 700; font-size: 16px; color: var(--color-text-secondary); }
+/* The badge pill's own horizontal padding (16px, see .badge) pushes its
+   text right of the flush-left name/category/price above it — pull the
+   whole row back by that same amount so the label text lines up. */
+.product-card__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-left: -16px; }
 
 .empty-state { padding: 64px 0; text-align: center; color: var(--color-text-secondary); font-size: 15px; }
 
@@ -796,7 +1123,7 @@ body.menu-open .site-header__overlay {
 /* Mobile-only filter drawer chrome — hidden on desktop so it can't
    join the .catalog-layout grid as a stray auto-placed item. */
 .filters__close,
-.filters__apply {
+.filters__actions {
   display: none;
 }
 .filters-overlay {
@@ -819,23 +1146,48 @@ body.menu-open .site-header__overlay {
     border-radius: 0;
     border: none;
     z-index: 61;
-    padding: 24px 20px 32px;
+    /* нижний отступ — под фиксированную панель "Сбросить / Применить" */
+    padding: 20px 20px 120px;
     box-shadow: none;
   }
   .filters__close {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+    display: flex; align-items: center; margin-bottom: 24px;
+  }
+  .filters__back-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; flex-shrink: 0;
+    border-radius: 50%; border: 1px solid var(--color-border);
+    background: var(--color-surface); color: var(--color-text);
+    cursor: pointer; padding: 0;
   }
   .filters__close-title {
-    font-family: var(--font-heading); font-weight: 600; font-size: 20px;
+    flex: 1; text-align: center;
+    font-weight: 700; font-size: 20px;
     color: var(--color-text); margin: 0; line-height: 1;
   }
-  .filters__close-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border);
-    background: transparent; font-size: 15px; line-height: 1; color: var(--color-text); cursor: pointer;
-    padding: 0;
+  /* симметричная "пустышка" справа, чтобы заголовок стоял ровно по центру */
+  .filters__header-spacer { width: 44px; flex-shrink: 0; }
+  .filters__title { font-size: 17px; }
+  .filters__actions {
+    display: flex; gap: 12px;
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: 62;
+    padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+    background: var(--color-surface);
+    box-shadow: 0 -6px 24px rgba(31, 42, 36, 0.08);
   }
-  .filters__apply { display: block; width: 100%; margin-top: 8px; }
+  .filters__reset {
+    flex: 1;
+    font-family: var(--font-body); font-weight: 700; font-size: 15px;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 14px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .filters__apply { flex: 1.4; }
   body.filters-open .filters { display: block; }
   body.filters-open .filters-overlay { display: block; }
   .filters__checkbox {
@@ -865,9 +1217,12 @@ body.menu-open .site-header__overlay {
   }
   .search-box { max-width: none; margin-bottom: 24px; padding-bottom: 16px; }
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  .product-card__photo { height: 130px; }
-  .product-card__body { padding: 12px; }
+  .product-card { padding: 8px; border-radius: 14px; }
+  .product-card__photo { height: 130px; border-radius: 10px; }
+  .product-card__body { padding: 10px 4px 4px; }
   .product-card__name { font-size: 13px; }
+  .product-card__price { font-size: 14px; }
+  .product-card__badges { margin-left: -10px; }
   .product-card__badges .badge { font-size: 11px; padding: 5px 10px; }
 }
 
@@ -894,7 +1249,7 @@ body.menu-open .site-header__overlay {
 
 .product-main__info { display: flex; flex-direction: column; }
 .product-main__category { color: var(--color-text-secondary); font-size: 14px; margin-bottom: 12px; }
-.product-main__title { font-weight: 600; font-size: 40px; line-height: 1.1; margin: 0 0 20px; }
+.product-main__title { font-family: var(--font-body); font-weight: 700; font-size: 40px; line-height: 1.1; margin: 0 0 20px; letter-spacing: -0.01em; }
 .product-main__badge { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
 
 .product-main__price-block {
@@ -903,7 +1258,7 @@ body.menu-open .site-header__overlay {
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
 }
-.product-main__price { font-family: var(--font-heading); font-weight: 600; font-size: 34px; }
+.product-main__price { font-weight: 700; font-size: 32px; letter-spacing: -0.01em; }
 .product-main__meta { color: var(--color-text-secondary); font-size: 15px; }
 
 .product-main__specs { display: flex; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -913,7 +1268,7 @@ body.menu-open .site-header__overlay {
 .product-main__desc { font-size: 15px; line-height: 1.75; color: var(--color-text); opacity: 0.85; margin: 0 0 36px; max-width: 480px; }
 
 .related { padding: 80px var(--gutter-desktop); }
-.related__title { font-weight: 600; font-size: 32px; margin: 0 0 40px; }
+.related__title { font-weight: 700; font-size: 32px; margin: 0 0 40px; letter-spacing: -0.01em; }
 .related .product-grid { margin-bottom: 0; }
 
 @media (max-width: 900px) {
@@ -930,7 +1285,7 @@ body.menu-open .site-header__overlay {
    Price list page
    ========================================================================== */
 
-.pricelist-page { padding: 32px var(--gutter-desktop) 80px; max-width: 900px; }
+.pricelist-page { padding: 32px var(--gutter-desktop) 80px; max-width: 900px; margin: 0 auto; }
 
 .pricelist-toolbar {
   display: flex;
@@ -948,14 +1303,31 @@ body.menu-open .site-header__overlay {
 
 .pricelist__group { margin-bottom: 40px; }
 .pricelist__group:last-child { margin-bottom: 0; }
-.pricelist__category {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 22px;
-  color: var(--color-primary);
+.pricelist__category-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
   margin: 0 0 12px;
   padding-bottom: 10px;
   border-bottom: 2px solid var(--color-primary);
+}
+.pricelist__category {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 21px;
+  color: var(--color-primary);
+  margin: 0;
+}
+/* Shown once, on the first category only — explains the "опт / розница"
+   price order so it doesn't need repeating on every row. */
+.pricelist__price-header {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .pricelist__rows { display: flex; flex-direction: column; }
@@ -975,7 +1347,7 @@ body.menu-open .site-header__overlay {
   font-weight: 700;
   color: var(--color-badge-preorder-text);
 }
-.pricelist__price { font-family: var(--font-heading); font-weight: 600; font-size: 16px; white-space: nowrap; }
+.pricelist__price { font-weight: 700; font-size: 15px; white-space: nowrap; }
 
 @media (max-width: 900px) {
   .pricelist-page { padding: 20px 20px 40px; }
@@ -983,6 +1355,7 @@ body.menu-open .site-header__overlay {
   .pricelist-downloads { width: 100%; }
   .pricelist-downloads .btn { flex: 1; }
   .pricelist__category { font-size: 18px; }
+  .pricelist__price-header { font-size: 11px; }
   .pricelist__name { font-size: 14px; }
   .pricelist__price { font-size: 14px; }
 }
@@ -991,7 +1364,7 @@ body.menu-open .site-header__overlay {
    strip everything but the price list itself down to plain paper-friendly
    text; fixed header/footer chrome and buttons make no sense on a page. */
 @media print {
-  .topbar, .site-header, .site-header__overlay, .site-header__mobile-panel,
+  .site-header, .site-header__overlay, .site-header__mobile-panel,
   .site-footer, .pricelist-toolbar, .cookie-banner {
     display: none !important;
   }
@@ -1057,25 +1430,38 @@ body.menu-open .site-header__menu-icon--close {
 
   /* These links keep their own color on hover instead of turning accent. */
   .site-header__logo:hover { color: var(--color-primary); }
-  .product-card:hover { color: var(--color-primary); }
-  .topbar__contact:hover { color: var(--color-bg); text-decoration: underline; }
+  .product-card:hover { background: var(--color-search-fill); }
+  .site-search__result:hover { background: var(--color-search-fill); }
+  /* Mobile menu links: no hover color change at all (client's call — don't
+     add hover effects here unless asked). */
+  .mobile-menu__nav a:hover { color: var(--color-text); }
+  /* Desktop nav: only the underline changes on hover, text stays put. */
+  .site-header__nav > a:hover { color: var(--color-text); }
+  /* "Ещё" dropdown items: no accent fill on hover — plain text. */
+  .site-header__dropdown-item:hover { color: var(--color-text); }
+  .mobile-menu__contact-value:hover { color: var(--color-primary); }
+  .mobile-menu__social-btn:hover { color: var(--color-text); }
+  .mobile-menu__social-btn--telegram:hover { color: var(--color-telegram); }
   .pricelist__row:hover { color: var(--color-primary); }
   .pricelist__row:hover .pricelist__name { text-decoration: underline; }
 
   .btn-primary:hover { background: var(--color-primary-hover); color: var(--color-bg); transform: translateY(-1px); }
+  .btn-accent:hover { background: var(--color-accent-hover); color: #FFFFFF; transform: translateY(-1px); }
   .btn-outline:hover { background: var(--color-primary); color: var(--color-bg); }
   .btn-light:hover { background: #F4EFE8; color: var(--color-primary); transform: translateY(-1px); }
+  .btn-yandex:hover { background: var(--color-yandex-red); color: #fff; transform: translateY(-1px); }
+  .btn-word:hover { background: var(--color-word-hover); transform: translateY(-1px); }
+  .btn-excel:hover { background: var(--color-excel-hover); transform: translateY(-1px); }
+  .btn-pdf:hover { background: var(--color-pdf-hover); transform: translateY(-1px); }
 
-  .site-header__nav a:hover { color: var(--color-primary); }
+  .site-header__nav > a:hover { border-bottom-color: var(--color-primary); }
 
   .site-footer__bottom a:hover { color: var(--color-accent); }
   .site-footer__phones a:hover, .site-footer__email:hover { color: var(--color-accent); text-decoration: underline; }
 
-  .hero__link:hover { gap: 12px; color: var(--color-bg); text-decoration: underline; transform: translateY(-1px); }
 
   .category-feature:hover { box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16); transform: translateY(-2px); }
   .category-card:hover { box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16); transform: translateY(-2px); }
-  .map-card:hover { box-shadow: 0 16px 40px rgba(31, 42, 36, 0.16); transform: translateY(-2px); }
 
   .breadcrumb-back:hover { gap: 10px; color: var(--color-primary); }
   .breadcrumb-trail a:hover { color: var(--color-accent); }

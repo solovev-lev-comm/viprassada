@@ -13,6 +13,7 @@
   }
 
   function openMenu() {
+    document.body.classList.remove('search-open');
     document.body.classList.add('menu-open');
   }
 
@@ -24,6 +25,24 @@
   }
   if (overlay) overlay.addEventListener('click', closeMenu);
   closeEls.forEach((el) => el.addEventListener('click', closeMenu));
+})();
+
+// Fixed header: thin separator line flashes on while the page is actively
+// scrolling (any direction) and fades back out shortly after it stops.
+(function () {
+  const IDLE_DELAY = 500; // ms of no scroll events before the line hides
+
+  let hideTimer = null;
+
+  function onScroll() {
+    document.body.classList.add('is-scrolled');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      document.body.classList.remove('is-scrolled');
+    }, IDLE_DELAY);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 })();
 
 // Cookie consent banner — shown once per browser (localStorage), on every

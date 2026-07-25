@@ -11,45 +11,84 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar__hours">
-    <svg class="topbar__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-    Ежедневно 8:00–18:00
-  </div>
-  <div class="topbar__contacts">
-    <a href="tel:+79160012237" class="topbar__contact topbar__contact--phone">
-      <svg class="topbar__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      +7 (916) 001-22-37
-    </a>
-    <a href="mailto:info@viprassada.ru" class="topbar__contact topbar__contact--email">
-      <svg class="topbar__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
-      info@viprassada.ru
-    </a>
-  </div>
-</div>
-
 <header class="site-header">
-  <a href="index.html" class="site-header__logo">VIPRASSADA</a>
+  <a href="index.html" class="site-header__logo">
+    <span class="site-header__logo-title">VIPRASSADA</span>
+    <span class="site-header__logo-tagline">рассада цветов и овощей</span>
+  </a>
   <nav class="site-header__nav">
     <a href="catalog.html">Каталог</a>
     <a href="pricelist.html">Прайс-лист</a>
     <a href="index.html#about">О нас</a>
     <a href="index.html#contacts">Контакты</a>
+    <div class="site-header__more">
+      <button class="site-header__more-btn" type="button">
+        Ещё
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="site-header__dropdown">
+        <div class="site-header__dropdown-card">
+          <span class="site-header__dropdown-item">Оплата</span>
+          <a href="index.html#map" class="site-header__dropdown-item">Мы на карте</a>
+        </div>
+      </div>
+    </div>
   </nav>
   <button class="btn btn-outline site-header__call desktop-only">Позвонить</button>
   <button class="site-header__menu-btn" data-menu-toggle aria-label="Меню">
-    <svg class="site-header__menu-icon--open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-    <svg class="site-header__menu-icon--close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    <svg class="site-header__menu-icon--open" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <svg class="site-header__menu-icon--close" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F2A24" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <button class="site-header__search-btn" data-mobile-search-toggle type="button" aria-label="Поиск">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
   </button>
 </header>
 
+<div class="site-search">
+  <button class="site-search__back" data-mobile-search-close type="button" aria-label="Закрыть поиск">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="site-search__box">
+    <input class="site-search__input" type="text" placeholder="Поиск по каталогу: томаты, клубника, петуния…" aria-label="Поиск по каталогу">
+    <svg class="site-search__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+  </div>
+</div>
+
 <div class="site-header__overlay" data-menu-overlay></div>
 <div class="site-header__mobile-panel">
-  <a href="catalog.html" data-menu-close>Каталог</a>
-  <a href="pricelist.html" data-menu-close>Прайс-лист</a>
-  <a href="index.html#about" data-menu-close>О нас</a>
-  <a href="index.html#contacts" data-menu-close>Контакты</a>
-  <button class="btn btn-primary">Позвонить</button>
+  <div class="mobile-menu__contact-row">
+    <div class="mobile-menu__contact-col">
+      <div class="mobile-menu__contact-label">Позвоните нам</div>
+      <a href="tel:+79160012237" class="mobile-menu__contact-value">+7 (916) 001-22-37</a>
+    </div>
+    <div class="mobile-menu__contact-divider"></div>
+    <div class="mobile-menu__contact-col">
+      <div class="mobile-menu__contact-label">Задайте вопрос</div>
+      <a href="https://t.me/danechka686" target="_blank" rel="noopener" class="mobile-menu__contact-value">Чат в Telegram</a>
+    </div>
+  </div>
+
+  <nav class="mobile-menu__nav">
+    <a href="catalog.html" data-menu-close>Каталог</a>
+    <a href="pricelist.html" data-menu-close>Прайс-лист</a>
+    <a href="index.html#about" data-menu-close>О нас</a>
+    <a href="index.html#contacts" data-menu-close>Контакты</a>
+  </nav>
+
+  <div class="mobile-menu__social">
+    <div class="mobile-menu__social-label">Мы на связи</div>
+    <div class="mobile-menu__social-row">
+      <a href="https://t.me/danechka686" target="_blank" rel="noopener" class="mobile-menu__social-btn mobile-menu__social-btn--telegram" aria-label="Telegram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </a>
+      <a href="https://yandex.ru/maps/1/moscow-and-moscow-oblast/house/derevnya_vokhrinka_67/Z0EYdQZiTUwGQFtvfXhxcHpqbA==/?from=mapframe&amp;ll=38.310421%2C55.401585&amp;source=mapframe&amp;um=constructor%3A4706021e584163ac9a08b8d9d124bbad1421216e9583e39c845df340fe2b00db&amp;utm_source=share&amp;z=17" target="_blank" rel="noopener" class="mobile-menu__social-btn" aria-label="Мы на карте">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"></path></svg>
+      </a>
+      <a href="mailto:info@viprassada.ru" class="mobile-menu__social-btn" aria-label="Email">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>
+      </a>
+    </div>
+  </div>
 </div>
 
 <main data-product-root>
@@ -70,7 +109,7 @@
     </div>
     <div>
       <div class="site-footer__label">Адрес</div>
-      <div class="site-footer__address">Московская область,<br>Раменский г.о., д. Панино,<br>Дальняя улица, 100А</div>
+      <div class="site-footer__address">Московская область,<br>Раменский м.о.,<br>д. Вохринка, 67,<br>140166</div>
     </div>
   </div>
 
@@ -86,6 +125,7 @@
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/search.js"></script>
 <script src="assets/js/product.js"></script>
 </body>
 </html>
