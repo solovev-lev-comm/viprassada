@@ -13,14 +13,14 @@
   },
   {
     "id": "cherenki-kofeya",
-    "name": "Кофея",
+    "name": "Кохея",
     "category": "Укоренённые черенки",
     "subcategory": null,
     "price_retail": 350,
     "price_wholesale": 250,
     "tray_unit": null,
     "description": null,
-    "image": null,
+    "image": "/images/products/koheya.jpg",
     "in_stock": true
   },
   {
@@ -1302,11 +1302,11 @@
     "name": "Клубника",
     "category": "Клубника и земляника",
     "subcategory": null,
-    "price_retail": null,
+    "price_retail": 100,
     "price_wholesale": null,
     "tray_unit": null,
     "description": null,
-    "image": null,
+    "image": "/images/products/klubnika/klubnica.jpg",
     "in_stock": true
   },
   {
@@ -1426,7 +1426,7 @@
     "price_wholesale": 80,
     "tray_unit": null,
     "description": null,
-    "image": null,
+    "image": "/images/products/okno/perets-ornamental.jpg",
     "in_stock": true
   },
   {

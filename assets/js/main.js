@@ -27,6 +27,54 @@
   closeEls.forEach((el) => el.addEventListener('click', closeMenu));
 })();
 
+// "Оплата" in the header's "Ещё" dropdown opens a small rounded popup with
+// the store's payment/wholesale info — same content as the product page's
+// accordion (see VIPRASSADA.paymentInfoRowsHtml in data.js). Built lazily on
+// first open since data.js (loaded right after this file) needs to have run.
+(function () {
+  const triggers = document.querySelectorAll('[data-payment-modal-toggle]');
+  if (!triggers.length) return;
+
+  let modalEl = null;
+
+  function closeModal() {
+    if (!modalEl) return;
+    modalEl.classList.remove('payment-modal--open');
+    document.body.classList.remove('payment-modal-open');
+  }
+
+  function buildModal() {
+    const el = document.createElement('div');
+    el.className = 'payment-modal';
+    el.innerHTML = `
+      <div class="payment-modal__backdrop" data-payment-modal-close></div>
+      <div class="payment-modal__card" role="dialog" aria-modal="true" aria-label="Оплата и опт">
+        <button type="button" class="payment-modal__close" data-payment-modal-close aria-label="Закрыть">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <h2 class="payment-modal__title">Оплата и опт</h2>
+        <div class="payment-modal__rows">${VIPRASSADA.paymentInfoRowsHtml()}</div>
+      </div>
+    `;
+    document.body.appendChild(el);
+    el.querySelectorAll('[data-payment-modal-close]').forEach((btn) => btn.addEventListener('click', closeModal));
+    el.querySelector('.payment-modal__card').addEventListener('click', (e) => e.stopPropagation());
+    return el;
+  }
+
+  function openModal() {
+    if (!modalEl) modalEl = buildModal();
+    modalEl.classList.add('payment-modal--open');
+    document.body.classList.add('payment-modal-open');
+  }
+
+  triggers.forEach((btn) => btn.addEventListener('click', openModal));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalEl && modalEl.classList.contains('payment-modal--open')) closeModal();
+  });
+})();
+
 // Fixed header: thin separator line flashes on while the page is actively
 // scrolling (any direction) and fades back out shortly after it stops.
 (function () {

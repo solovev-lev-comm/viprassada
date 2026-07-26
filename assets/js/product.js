@@ -11,6 +11,27 @@
     `;
   }
 
+  // Static store-wide payment/wholesale info — same on every product page,
+  // not driven by product data.
+  function paymentAccordionHtml() {
+    return `
+      <div class="payment-accordion" data-payment-accordion>
+        <button type="button" class="payment-accordion__toggle" data-payment-toggle aria-expanded="false">
+          <span class="payment-accordion__toggle-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+          </span>
+          <span class="payment-accordion__toggle-label">Оплата и опт</span>
+          <svg class="payment-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="payment-accordion__panel" data-payment-panel>
+          <div class="payment-accordion__panel-inner">
+            ${VIPRASSADA.paymentInfoRowsHtml()}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   function relatedSectionHtml(related) {
     if (related.length === 0) return '';
     return `
@@ -63,12 +84,23 @@
 
           ${product.description ? `<p class="product-main__desc">${VIPRASSADA.escapeHtml(product.description)}</p>` : ''}
 
-          <a href="tel:+79297675020" class="btn btn-primary">Позвонить по этому товару</a>
+          ${paymentAccordionHtml()}
+
+          <a href="tel:+79297675020" class="btn btn-primary product-main__cta">Позвонить по этому товару</a>
         </div>
       </div>
 
       ${relatedSectionHtml(related)}
     `;
+
+    const paymentToggle = root.querySelector('[data-payment-toggle]');
+    if (paymentToggle) {
+      paymentToggle.addEventListener('click', () => {
+        const accordion = paymentToggle.closest('[data-payment-accordion]');
+        const isOpen = accordion.classList.toggle('payment-accordion--open');
+        paymentToggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
   }
 
   VIPRASSADA.loadData().then((data) => {

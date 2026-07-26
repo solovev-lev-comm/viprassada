@@ -282,13 +282,18 @@ h1, h2, h3 { font-family: var(--font-body); margin: 0; }
 
 .site-header__dropdown-item {
   display: block;
+  width: 100%;
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 500;
   color: var(--color-text);
   white-space: nowrap;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
 }
-span.site-header__dropdown-item { cursor: default; }
 
 .site-header__call {
   font-size: 13px;
@@ -1259,7 +1264,11 @@ body.menu-open .site-header__overlay {
 .product-main__photo {
   border-radius: var(--radius-card);
   overflow: hidden;
-  height: 520px;
+  /* min-height (not height) so the grid's default stretch can still grow
+     it to match the info column when that column's content runs taller
+     than 520px — otherwise the CTA's margin-top: auto below has no room
+     to push into and can't reach the photo's actual bottom edge. */
+  min-height: 520px;
   background-size: cover;
   background-position: center;
   background-color: var(--color-border);
@@ -1285,18 +1294,161 @@ body.menu-open .site-header__overlay {
 
 .product-main__desc { font-size: 15px; line-height: 1.75; color: var(--color-text); opacity: 0.85; margin: 0 0 36px; max-width: 480px; }
 
+/* Pushes the call-to-action to the bottom of the info column, flush with
+   the photo's bottom edge, regardless of how much content sits above it —
+   .product-main__info already stretches to match the photo's height (CSS
+   grid's default align-items: stretch), so margin-top: auto just claims
+   the leftover space. Mobile stacks photo/info in one column with no
+   stretch, so this has no effect there — nothing to override. */
+.product-main__cta { margin-top: auto; }
+
+/* Static store-wide payment/wholesale info accordion — same on every
+   product page, not product-specific data. */
+.payment-accordion {
+  background: var(--color-badge-ground-bg);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.payment-accordion__toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: left;
+}
+.payment-accordion__toggle-icon { display: flex; flex-shrink: 0; color: var(--color-badge-ground-text); }
+.payment-accordion__toggle-label { flex: 1; }
+.payment-accordion__chevron { flex-shrink: 0; color: var(--color-text-secondary); transition: transform 0.2s ease; }
+.payment-accordion--open .payment-accordion__chevron { transform: rotate(180deg); }
+
+.payment-accordion__panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.payment-accordion--open .payment-accordion__panel { max-height: 400px; }
+
+.payment-accordion__panel-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 20px 20px;
+}
+
+.payment-accordion__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+.payment-accordion__row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.payment-accordion__note {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 4px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(31, 42, 36, 0.1);
+}
+
 .related { padding: 80px var(--gutter-desktop); }
 .related__title { font-weight: 700; font-size: 32px; margin: 0 0 40px; letter-spacing: -0.01em; }
 .related .product-grid { margin-bottom: 0; }
 
 @media (max-width: 900px) {
   .product-main { grid-template-columns: 1fr; gap: 0; padding: 20px 20px 40px; }
-  .product-main__photo { height: 280px; margin-bottom: 20px; }
+  /* min-height: 0 cancels the desktop rule's 520px floor — mobile stacks
+     photo above info in separate grid rows, so there's no stretch to
+     account for and the photo should just be its own compact crop. */
+  .product-main__photo { height: 280px; min-height: 0; margin-bottom: 20px; }
+  .product-main__cta { margin-top: 0; }
   .product-main__title { font-size: 26px; margin-bottom: 14px; }
   .product-main__price-block { padding: 18px 0; margin-bottom: 20px; }
   .product-main__price { font-size: 26px; }
   .related { padding: 40px 20px; }
   .related__title { font-size: 22px; margin-bottom: 20px; }
+}
+
+/* ==========================================================================
+   Payment info popup — opened from "Оплата" in the header's "Ещё" dropdown.
+   Same content as the product page's payment accordion (see
+   VIPRASSADA.paymentInfoRowsHtml in data.js), just presented as a rounded,
+   centered popup instead of an inline collapsible.
+   ========================================================================== */
+
+body.payment-modal-open { overflow: hidden; }
+
+.payment-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+.payment-modal--open { display: flex; align-items: center; justify-content: center; padding: 24px; }
+
+.payment-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(31, 42, 36, 0.6);
+}
+
+.payment-modal__card {
+  position: relative;
+  width: min(420px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border-radius: 28px;
+  padding: 40px 32px 32px;
+  box-shadow: 0 24px 64px rgba(31, 42, 36, 0.28);
+}
+
+.payment-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-search-fill);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+}
+
+.payment-modal__title { font-size: 22px; font-weight: 700; color: var(--color-text); margin: 0 0 24px; }
+
+.payment-modal__rows { display: flex; flex-direction: column; gap: 16px; }
+
+@media (max-width: 900px) {
+  .payment-modal__card { padding: 32px 24px 28px; }
 }
 
 /* ==========================================================================

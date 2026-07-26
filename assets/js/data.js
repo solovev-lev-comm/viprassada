@@ -135,6 +135,32 @@ window.VIPRASSADA = (function () {
     `;
   }
 
+  // Store-wide payment/wholesale info — same content wherever it's shown
+  // (product page accordion, header "Оплата" popup), so it lives here once.
+  function paymentInfoRowsHtml() {
+    return `
+      <div class="payment-accordion__row">
+        <span class="payment-accordion__row-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+        </span>
+        <span><strong>Наличными</strong> — при получении заказа</span>
+      </div>
+      <div class="payment-accordion__row">
+        <span class="payment-accordion__row-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        </span>
+        <span><strong>Картой / СБП</strong> — перевод при встрече</span>
+      </div>
+      <div class="payment-accordion__row">
+        <span class="payment-accordion__row-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        </span>
+        <span><strong>Безнал</strong> — счёт для ИП и юрлиц, опт</span>
+      </div>
+      <p class="payment-accordion__note">Опт считаем от кассеты — 40, 54 или 28 шт. в зависимости от культуры, не от суммы заказа. К каждому клиенту — индивидуальный подход, всё обсуждаем по звонку.</p>
+    `;
+  }
+
   function productCardHtml(product) {
     return `
       <a class="product-card" href="product.html?id=${encodeURIComponent(product.id)}">
@@ -153,5 +179,5 @@ window.VIPRASSADA = (function () {
     `;
   }
 
-  return { loadData, formatPrice, priceDisplayHtml, escapeHtml, availabilityBadgeHtml, groundTypeBadgeHtml, productPhotoHtml, productCardHtml };
+  return { loadData, formatPrice, priceDisplayHtml, escapeHtml, availabilityBadgeHtml, groundTypeBadgeHtml, productPhotoHtml, productCardHtml, paymentInfoRowsHtml };
 })();
