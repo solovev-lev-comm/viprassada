@@ -65,6 +65,7 @@ window.VIPRASSADA = (function () {
             categoryName: p.category,
             subcategory: p.subcategory,
             growingType: p.growingType,
+            ripening: p.ripening,
             description: p.description,
             price: p.price_retail,
             priceWholesale: p.price_wholesale,
@@ -119,6 +120,15 @@ window.VIPRASSADA = (function () {
     if (!product.growingType) return '';
     const types = product.growingType === 'both' ? ['open', 'closed'] : [product.growingType];
     return types.map((t) => `<span class="badge badge-ground">${GROUND_TYPE_LABELS[t]}</span>`).join('');
+  }
+
+  const RIPENING_LABELS = { early: 'Раннеспелая', mid: 'Среднеспелая', late: 'Позднеспелая' };
+
+  // Only the white cabbage varieties carry a ripening period — same badge
+  // treatment as the tomatoes' ground type.
+  function ripeningBadgeHtml(product) {
+    if (!product.ripening) return '';
+    return `<span class="badge badge-ground">${RIPENING_LABELS[product.ripening]}</span>`;
   }
 
   // Renders the photo area for a product card / product page. Falls back to
@@ -179,5 +189,5 @@ window.VIPRASSADA = (function () {
     `;
   }
 
-  return { loadData, formatPrice, priceDisplayHtml, escapeHtml, availabilityBadgeHtml, groundTypeBadgeHtml, productPhotoHtml, productCardHtml, paymentInfoRowsHtml };
+  return { loadData, formatPrice, priceDisplayHtml, escapeHtml, availabilityBadgeHtml, groundTypeBadgeHtml, ripeningBadgeHtml, productPhotoHtml, productCardHtml, paymentInfoRowsHtml };
 })();

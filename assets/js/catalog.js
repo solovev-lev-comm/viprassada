@@ -5,6 +5,12 @@
     { value: 'open', label: 'Открытый грунт' },
     { value: 'closed', label: 'Закрытый грунт' },
   ];
+  const KAPUSTA_SLUG = 'kapusta';
+  const CABBAGE_RIPENING_TYPES = [
+    { value: 'early', label: 'Раннеспелая' },
+    { value: 'mid', label: 'Среднеспелая' },
+    { value: 'late', label: 'Позднеспелая' },
+  ];
 
   const els = {
     totalCount: document.querySelector('[data-total-count]'),
@@ -33,6 +39,7 @@
     products: [],
     selectedCategories: new Set(),
     tomatoGroundTypes: new Set(), // subset of {'open','closed'}; empty = none picked
+    cabbageRipening: new Set(), // subset of {'early','mid','late'}; empty = none picked
     minPrice: null,
     maxPrice: null,
     availability: 'all',
@@ -44,6 +51,7 @@
     let count = 0;
     if (state.selectedCategories.size > 0 && state.selectedCategories.size < state.categories.length) count++;
     if (state.tomatoGroundTypes.size > 0 && state.tomatoGroundTypes.size < TOMATO_GROUND_TYPES.length) count++;
+    if (state.cabbageRipening.size > 0 && state.cabbageRipening.size < CABBAGE_RIPENING_TYPES.length) count++;
     if (state.minPrice != null || state.maxPrice != null) count++;
     if (state.availability !== 'all') count++;
     if (els.filtersCount) els.filtersCount.textContent = String(count);
@@ -71,8 +79,28 @@
     });
   }
 
+  // Same pattern as the tomato ground-type filter, for the cabbage category's
+  // ripening period — see setTomatoGroundTypes/syncTomatoUI above.
+  function setCabbageRipening(selected) {
+    state.cabbageRipening = selected;
+
+    if (state.cabbageRipening.size > 0) {
+      state.selectedCategories.add(KAPUSTA_SLUG);
+    } else {
+      state.selectedCategories.delete(KAPUSTA_SLUG);
+    }
+  }
+
+  function syncCabbageUI() {
+    const parentCb = els.categoryList.querySelector(`[data-category-checkbox][value="${KAPUSTA_SLUG}"]`);
+    if (parentCb) parentCb.checked = state.cabbageRipening.size === CABBAGE_RIPENING_TYPES.length;
+    els.categoryList.querySelectorAll('[data-ripening]').forEach((cb) => {
+      cb.checked = state.cabbageRipening.has(cb.value);
+    });
+  }
+
   function categoryRowHtml(cat) {
-    if (cat.slug !== TOMATO_SLUG) {
+    if (cat.slug !== TOMATO_SLUG && cat.slug !== KAPUSTA_SLUG) {
       return `
         <label class="filters__checkbox">
           <input type="checkbox" data-category-checkbox value="${VIPRASSADA.escapeHtml(cat.slug)}" ${state.selectedCategories.has(cat.slug) ? 'checked' : ''}>
@@ -81,11 +109,15 @@
       `;
     }
 
-    const groundTypeOptions = TOMATO_GROUND_TYPES.map(({ value, label }) => `
+    const isTomato = cat.slug === TOMATO_SLUG;
+    const subOptions = (isTomato ? TOMATO_GROUND_TYPES : CABBAGE_RIPENING_TYPES).map(({ value, label }) => `
       <label class="filters__checkbox filters__checkbox--sub">
-        <input type="checkbox" data-growing-type value="${value}"> ${VIPRASSADA.escapeHtml(label)}
+        <input type="checkbox" ${isTomato ? 'data-growing-type' : 'data-ripening'} value="${value}"> ${VIPRASSADA.escapeHtml(label)}
       </label>
     `).join('');
+    const expandAttr = isTomato ? 'data-tomato-expand' : 'data-cabbage-expand';
+    const subPanelAttr = isTomato ? 'data-tomato-subcategories' : 'data-cabbage-subcategories';
+    const expandLabel = isTomato ? 'Показать подкатегории грунта' : 'Показать сроки созревания';
 
     return `
       <div class="filters__category-item">
@@ -94,13 +126,13 @@
             <input type="checkbox" data-category-checkbox value="${cat.slug}" ${state.selectedCategories.has(cat.slug) ? 'checked' : ''}>
             ${VIPRASSADA.escapeHtml(cat.name)}
           </label>
-          <button type="button" class="filters__expand-btn" data-tomato-expand aria-label="Показать подкатегории грунта" aria-expanded="false">
+          <button type="button" class="filters__expand-btn" ${expandAttr} aria-label="${expandLabel}" aria-expanded="false">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
           </button>
         </div>
-        <div class="filters__subcategories" data-tomato-subcategories>
+        <div class="filters__subcategories" ${subPanelAttr}>
           <div class="filters__subcategories-inner">
-            ${groundTypeOptions}
+            ${subOptions}
           </div>
         </div>
       </div>
@@ -116,6 +148,9 @@
           // Checking the parent selects both ground types; unchecking clears them.
           setTomatoGroundTypes(cb.checked ? new Set(TOMATO_GROUND_TYPES.map((t) => t.value)) : new Set());
           syncTomatoUI();
+        } else if (cb.value === KAPUSTA_SLUG) {
+          setCabbageRipening(cb.checked ? new Set(CABBAGE_RIPENING_TYPES.map((t) => t.value)) : new Set());
+          syncCabbageUI();
         } else if (cb.checked) {
           state.selectedCategories.add(cb.value);
         } else {
@@ -148,7 +183,29 @@
       });
     });
 
+    const cabbageExpandBtn = els.categoryList.querySelector('[data-cabbage-expand]');
+    const cabbageSubPanel = els.categoryList.querySelector('[data-cabbage-subcategories]');
+    if (cabbageExpandBtn && cabbageSubPanel) {
+      cabbageExpandBtn.addEventListener('click', () => {
+        const isOpen = cabbageSubPanel.classList.toggle('filters__subcategories--open');
+        cabbageExpandBtn.classList.toggle('filters__expand-btn--open', isOpen);
+        cabbageExpandBtn.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    els.categoryList.querySelectorAll('[data-ripening]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const next = new Set(state.cabbageRipening);
+        if (cb.checked) next.add(cb.value); else next.delete(cb.value);
+        setCabbageRipening(next);
+        syncCabbageUI();
+        state.page = 1;
+        render();
+      });
+    });
+
     syncTomatoUI();
+    syncCabbageUI();
   }
 
   function getFilteredProducts() {
@@ -160,9 +217,14 @@
     const groundFilterActive = state.tomatoGroundTypes.size === 1;
     const allowedGroundType = groundFilterActive ? [...state.tomatoGroundTypes][0] : null;
 
+    // Picking a subset of ripening periods narrows the cabbage results to
+    // those periods; picking all of them or none is the same as no filter.
+    const ripeningFilterActive = state.cabbageRipening.size > 0 && state.cabbageRipening.size < CABBAGE_RIPENING_TYPES.length;
+
     return state.products.filter((p) => {
       if (state.selectedCategories.size > 0 && !state.selectedCategories.has(p.category)) return false;
       if (groundFilterActive && p.category === TOMATO_SLUG && p.growingType !== allowedGroundType && p.growingType !== 'both') return false;
+      if (ripeningFilterActive && p.category === KAPUSTA_SLUG && !state.cabbageRipening.has(p.ripening)) return false;
       if (state.minPrice != null && p.price < state.minPrice) return false;
       if (state.maxPrice != null && p.price > state.maxPrice) return false;
       if (state.availability === 'in_stock' && p.availability !== 'in_stock') return false;
@@ -257,6 +319,8 @@
       if (categoryMatched) {
         if (categoryParam === TOMATO_SLUG) {
           setTomatoGroundTypes(new Set(TOMATO_GROUND_TYPES.map((t) => t.value)));
+        } else if (categoryParam === KAPUSTA_SLUG) {
+          setCabbageRipening(new Set(CABBAGE_RIPENING_TYPES.map((t) => t.value)));
         } else {
           state.selectedCategories.add(categoryParam);
         }
@@ -312,6 +376,7 @@
         resetBtn.addEventListener('click', () => {
           state.selectedCategories.clear();
           setTomatoGroundTypes(new Set());
+          setCabbageRipening(new Set());
           state.minPrice = null;
           state.maxPrice = null;
           state.availability = 'all';
@@ -322,6 +387,7 @@
           });
           els.categoryList.querySelectorAll('[data-category-checkbox]').forEach((cb) => { cb.checked = false; });
           syncTomatoUI();
+          syncCabbageUI();
           state.page = 1;
           render();
         });

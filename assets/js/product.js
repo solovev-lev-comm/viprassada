@@ -74,7 +74,7 @@
           <div class="product-main__category">${VIPRASSADA.escapeHtml(product.categoryName)}</div>
           <h1 class="product-main__title">${VIPRASSADA.escapeHtml(product.title)}</h1>
 
-          <div class="product-main__badge">${VIPRASSADA.availabilityBadgeHtml(product)}${VIPRASSADA.groundTypeBadgeHtml(product)}</div>
+          <div class="product-main__badge">${VIPRASSADA.availabilityBadgeHtml(product)}${VIPRASSADA.groundTypeBadgeHtml(product)}${VIPRASSADA.ripeningBadgeHtml(product)}</div>
 
           <div class="product-main__price-block">
             <span class="product-main__price">${VIPRASSADA.priceDisplayHtml(product)}</span>

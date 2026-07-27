@@ -1042,7 +1042,9 @@ body.menu-open .site-header__overlay {
   margin-left: 26px;
   transition: max-height 0.25s ease, opacity 0.2s ease;
 }
-.filters__subcategories--open { max-height: 120px; opacity: 1; }
+/* 160px comfortably fits the tomato ground-type list (2 rows) and the
+   cabbage ripening list (3 rows) alike. */
+.filters__subcategories--open { max-height: 160px; opacity: 1; }
 
 .filters__subcategories-inner {
   display: flex;
