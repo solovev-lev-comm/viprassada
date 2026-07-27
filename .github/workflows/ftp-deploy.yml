@@ -1,0 +1,33 @@
+name: Deploy to reg.ru via FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: FTP Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./
+          # Overrides the action's own defaults, so every pattern we still
+          # want excluded has to be listed here explicitly.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.claude/**
+            **/.github/**
+            **/.gitignore
