@@ -1,0 +1,18 @@
+# ==========================================================================
+# VIPRASSADA — clean URLs (mod_rewrite)
+# /catalog, /product, /privacy, /pricelist serve the matching .html file
+# without changing what's in the address bar. Physical files keep their
+# .html names — only requests get rewritten internally.
+# ==========================================================================
+
+Options -MultiViews
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# Only kicks in for a bare, extensionless path with no real file or
+# directory at that exact location — assets/, images/, data/ and any
+# actual static file (style.css, favicon.ico, ...) are left untouched.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/.]+)/?$ $1.html [L]

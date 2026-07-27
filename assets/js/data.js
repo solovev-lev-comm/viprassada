@@ -173,7 +173,7 @@ window.VIPRASSADA = (function () {
 
   function productCardHtml(product) {
     return `
-      <a class="product-card" href="product.html?id=${encodeURIComponent(product.id)}">
+      <a class="product-card" href="/product?id=${encodeURIComponent(product.id)}">
         ${productPhotoHtml(product.photo, 'product-card__photo')}
         <div class="product-card__body">
           <div class="product-card__name">${escapeHtml(product.title)}</div>

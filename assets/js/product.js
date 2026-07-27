@@ -47,9 +47,9 @@
   function renderNotFound() {
     root.innerHTML = `
       <div class="page-head">
-        <a href="catalog.html" class="breadcrumb-back">← Назад в каталог</a>
+        <a href="/catalog" class="breadcrumb-back">← Назад в каталог</a>
         <h1 class="page-head__title">Товар не найден</h1>
-        <p class="page-head__meta">Возможно, он был снят с продажи. Посмотрите остальные товары в <a href="catalog.html">каталоге</a>.</p>
+        <p class="page-head__meta">Возможно, он был снят с продажи. Посмотрите остальные товары в <a href="/catalog">каталоге</a>.</p>
       </div>
     `;
   }
@@ -61,9 +61,9 @@
 
     root.innerHTML = `
       <div class="page-head">
-        <a href="catalog.html?category=${encodeURIComponent(product.category)}" class="breadcrumb-back">← Назад в каталог</a>
+        <a href="/catalog?category=${encodeURIComponent(product.category)}" class="breadcrumb-back">← Назад в каталог</a>
         <div class="breadcrumb-trail">
-          <a href="catalog.html">Каталог</a> / <a href="catalog.html?category=${encodeURIComponent(product.category)}">${VIPRASSADA.escapeHtml(product.categoryName)}</a> / ${VIPRASSADA.escapeHtml(product.title)}
+          <a href="/catalog">Каталог</a> / <a href="/catalog?category=${encodeURIComponent(product.category)}">${VIPRASSADA.escapeHtml(product.categoryName)}</a> / ${VIPRASSADA.escapeHtml(product.title)}
         </div>
       </div>
 

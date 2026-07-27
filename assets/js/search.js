@@ -54,7 +54,7 @@
   }
 
   function goToProduct(id) {
-    window.location.href = 'product.html?id=' + encodeURIComponent(id);
+    window.location.href = '/product?id=' + encodeURIComponent(id);
   }
 
   VIPRASSADA.loadData().then((data) => {

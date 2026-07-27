@@ -117,7 +117,7 @@
     banner.setAttribute('aria-live', 'polite');
     banner.innerHTML =
       '<div class="cookie-banner__text">Мы используем cookie для улучшения работы сайта. ' +
-      'Подробнее — в <a href="privacy.html">Политике конфиденциальности</a>.</div>' +
+      'Подробнее — в <a href="/privacy">Политике конфиденциальности</a>.</div>' +
       '<div class="cookie-banner__actions">' +
       '<button type="button" class="cookie-banner__decline">Не разрешать</button>' +
       '<button type="button" class="cookie-banner__accept">Разрешить</button>' +

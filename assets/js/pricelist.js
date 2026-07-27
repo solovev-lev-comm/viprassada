@@ -15,7 +15,7 @@
   function rowHtml(p) {
     const note = p.availability === 'preorder' ? '<span class="pricelist__note">под заказ</span>' : '';
     return `
-      <a class="pricelist__row" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">
+      <a class="pricelist__row" href="/product?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">
         <span class="pricelist__name">${VIPRASSADA.escapeHtml(p.title)}${note}</span>
         <span class="pricelist__price">${VIPRASSADA.priceDisplayHtml(p)}</span>
       </a>
