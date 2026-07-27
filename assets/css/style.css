@@ -491,7 +491,18 @@ body.is-scrolled .site-search {
 .mobile-menu__contact-value { font-size: 15px; font-weight: 700; color: var(--color-primary); white-space: nowrap; }
 
 .mobile-menu__nav { display: flex; flex-direction: column; gap: 22px; }
-.mobile-menu__nav a { font-size: 20px; font-weight: 400; color: var(--color-text); }
+.mobile-menu__nav a, .mobile-menu__nav button {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
 
 .mobile-menu__social { margin-top: auto; text-align: center; }
 .mobile-menu__social-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 14px; }
@@ -1104,7 +1115,7 @@ body.menu-open .site-header__overlay {
 .product-card__name { font-weight: 600; font-size: 15px; margin-bottom: 4px; line-height: 1.35; color: var(--color-text); }
 .product-card__category { color: var(--color-text-secondary); font-size: 12px; margin-bottom: 12px; }
 .product-card__prices { display: flex; flex-direction: column; gap: 2px; margin-top: auto; margin-bottom: 12px; }
-.product-card__price { font-weight: 700; font-size: 16px; color: var(--color-text-secondary); }
+.product-card__price { font-weight: 700; font-size: 16px; color: var(--color-text); }
 /* The badge pill's own horizontal padding (16px, see .badge) pushes its
    text right of the flush-left name/category/price above it. Pulling the
    row back by the full 16px lines the text up exactly, but then the pill's
