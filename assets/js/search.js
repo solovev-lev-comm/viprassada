@@ -1,5 +1,6 @@
 // Live search in the header search bar (all pages). Type-ahead dropdown of
-// matching products; clicking one jumps straight to that product's own page.
+// matching categories and products; clicking a category opens the catalog
+// filtered to it, clicking a product jumps straight to its own page.
 //
 // On mobile the bar itself lives inside a full-screen overlay (opened by
 // the header's search icon, closed by its own back arrow) instead of a
@@ -24,10 +25,16 @@
     };
   }
 
-  function matchProducts(products, query) {
+  function matchCategories(categories, query) {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return products.filter((p) => p.title.toLowerCase().includes(q)).slice(0, MAX_RESULTS);
+    return categories.filter((c) => c.name.toLowerCase().includes(q));
+  }
+
+  function matchProducts(products, query, limit) {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return products.filter((p) => p.title.toLowerCase().includes(q)).slice(0, limit);
   }
 
   function resultPhotoHtml(product) {
@@ -53,8 +60,35 @@
     `;
   }
 
+  function categoryResultRowHtml(category) {
+    return `
+      <button type="button" class="site-search__result" data-category="${VIPRASSADA.escapeHtml(category.slug)}">
+        <div class="site-search__result-photo site-search__result-photo--placeholder">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </div>
+        <span class="site-search__result-body">
+          <span class="site-search__result-name">${VIPRASSADA.escapeHtml(category.name)}</span>
+          <span class="site-search__result-category">Категория</span>
+        </span>
+      </button>
+    `;
+  }
+
   function goToProduct(id) {
     window.location.href = '/product?id=' + encodeURIComponent(id);
+  }
+
+  function goToCategory(slug) {
+    window.location.href = '/catalog?category=' + encodeURIComponent(slug);
+  }
+
+  function selectResult(el) {
+    const categorySlug = el.getAttribute('data-category');
+    if (categorySlug) {
+      goToCategory(categorySlug);
+      return;
+    }
+    goToProduct(el.getAttribute('data-id'));
   }
 
   VIPRASSADA.loadData().then((data) => {
@@ -86,11 +120,14 @@
           }
           return;
         }
-        const matches = matchProducts(data.products, query);
-        if (!matches.length) {
+        const categoryMatches = matchCategories(data.categories, query);
+        const productMatches = matchProducts(data.products, query, MAX_RESULTS - categoryMatches.length);
+        if (!categoryMatches.length && !productMatches.length) {
           results.innerHTML = `<div class="site-search__empty">Ничего не нашли по «${VIPRASSADA.escapeHtml(query.trim())}»</div>`;
         } else {
-          results.innerHTML = matches.map(resultRowHtml).join('');
+          results.innerHTML =
+            categoryMatches.map(categoryResultRowHtml).join('') +
+            productMatches.map(resultRowHtml).join('');
         }
         results.classList.add('site-search__results--open');
       }
@@ -103,7 +140,7 @@
           const first = results.querySelector('.site-search__result');
           if (first) {
             e.preventDefault();
-            goToProduct(first.getAttribute('data-id'));
+            selectResult(first);
           }
         }
       });
@@ -111,7 +148,7 @@
       results.addEventListener('click', (e) => {
         const btn = e.target.closest('.site-search__result');
         if (!btn) return;
-        goToProduct(btn.getAttribute('data-id'));
+        selectResult(btn);
       });
 
       document.addEventListener('click', (e) => {
